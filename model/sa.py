@@ -134,6 +134,8 @@ class Encoder(nn.Module):
 
 
 class ViTPatch(nn.Module):
+    #patch
+    # hidden_size?
     def __init__(self, *, image_size, patch_size, hidden_size, num_classes, depth, heads,
                  mlp_dim, channels=3, dropout=0., emb_dropout=0.):
         super().__init__()
@@ -143,7 +145,7 @@ class ViTPatch(nn.Module):
 
         self.patch_size = patch_size
         self.hidden_size = hidden_size
-        self.embedding = nn.Conv2d(channels, hidden_size, patch_size, patch_size)
+        self.embedding = nn.Conv2d(channels, hidden_size, patch_size, patch_size) #why four parameters?
         self.scale = Scale_Embedding()
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, hidden_size))
