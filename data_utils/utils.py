@@ -61,7 +61,7 @@ def get_all_train_file(args, skim) -> Tuple[List[str],List[str],List[str]] :
 
     return file_ls, labels, cname
 
-
+# ?deprecated
 def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
     file_list = []
     for i in class_list:
@@ -78,12 +78,16 @@ def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
 
 
 def get_file_iccv(labels, rootpath, class_name, cname, number, file_ls):
-    # 该类的label
+    # 查询该类的label
+    # 返回值为(N,a.ndim), 第一个0为匹配到的第0个元素, 第二个0表示位置为该元素在input data中的坐标.
     label = np.argwhere(cname == class_name)[0, 0]
     # 该类的所有样本
-    ind = np.argwhere(labels == label)
-    ind_rand = np.random.randint(1, len(ind), number)
-    ind_ori = ind[ind_rand]
+    ind = np.argwhere(labels == label) #shape = (N,1), 第一维表示该label的图片数量, 第二维表示图片的位置索引
+    # number个数据
+    ind_rand = np.random.randint(1, len(ind), number) # shape = (number)
+    ind_ori = ind[ind_rand] # shape = (number,1)
+    #ind_ori = ind[ind_rand].reshape(number)
+    # ? file_ls.shape = (x), ind_ori.shape = (number,1), fancy indexing 规则
     files = file_ls[ind_ori][0][0]
     full_path = os.path.join(rootpath, files)
     return full_path
