@@ -4,6 +4,15 @@ from typing import List, Dict, Tuple
 
 # 预加载的一些文件
 def load_para(args):
+    """
+    Load training and testing class labels.
+
+    Args:
+        args: train.py args
+
+    Returns:
+        train_class_label:["table","teapot","harp",......]
+    """
     # test class labels
     if args.dataset == 'sketchy_extend':
         if args.test_class == 'test_class_sketchy25':
@@ -52,8 +61,8 @@ def load_para(args):
 
 class PreLoad:
     def __init__(self, args):
-        self.all_valid_or_test_sketch:List[str] = []
-        self.all_valid_or_test_sketch_label = []
+        self.all_valid_or_test_sketch:List[str] = [] #test file full path
+        self.all_valid_or_test_sketch_label = [] #test file class
         self.all_valid_or_test_image:List[str] = []
         self.all_valid_or_test_image_label = []
 
