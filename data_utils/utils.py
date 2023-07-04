@@ -4,9 +4,9 @@ import numpy as np
 from PIL import Image
 from torchvision.transforms import transforms
 import cv2
+from typing import List,Tuple
 
-
-def get_all_train_file(args, skim):
+def get_all_train_file(args, skim) -> Tuple[List[str],List[str],List[str]] :
     if skim != 'sketch' or skim != 'image':
         NameError(skim + ' not implemented!')
 
@@ -61,7 +61,7 @@ def get_all_train_file(args, skim):
 
     return file_ls, labels, cname
 
-
+# ?deprecated
 def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
     file_list = []
     for i in class_list:
@@ -78,20 +78,25 @@ def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
 
 
 def get_file_iccv(labels, rootpath, class_name, cname, number, file_ls):
-    # 该类的label
+    # 查询该类的label
+    # 返回值为(N,a.ndim), 第一个0为匹配到的第0个元素, 第二个0表示位置为该元素在input data中的坐标.
     label = np.argwhere(cname == class_name)[0, 0]
     # 该类的所有样本
-    ind = np.argwhere(labels == label)
-    ind_rand = np.random.randint(1, len(ind), number)
-    ind_ori = ind[ind_rand]
+    ind = np.argwhere(labels == label) #shape = (N,1), 第一维表示该label的图片数量, 第二维表示图片的位置索引
+    # number个数据
+    ind_rand = np.random.randint(1, len(ind), number) # shape = (number)
+    ind_ori = ind[ind_rand] # shape = (number,1)
+    #ind_ori = ind[ind_rand].reshape(number)
+    # ? file_ls.shape = (x), ind_ori.shape = (number,1), fancy indexing 规则
     files = file_ls[ind_ori][0][0]
     full_path = os.path.join(rootpath, files)
     return full_path
 
-
+#iccv?
 def get_file_list_iccv(args, rootpath, skim, split):
 
     if args.dataset == 'sketchy_extend':
+        #difference between test_class_sketchy25 and test_class_sketchy21
         if args.test_class == "test_class_sketchy25":
             shot_dir = "zeroshot1"
         elif args.test_class == "test_class_sketchy21":
@@ -101,9 +106,10 @@ def get_file_list_iccv(args, rootpath, skim, split):
 
         if skim == 'sketch':
             file_ls_file = args.data_path + f'/Sketchy/{shot_dir}/sketch_tx_000000000000_ready_filelist_zero.txt'
+            #256x256/sketch/tx_000000000000_ready/mushroom/n12998815_6750-2.png 86......
         elif skim == 'images':
             file_ls_file = args.data_path + f'/Sketchy/{shot_dir}/all_photo_filelist_zero.txt'
-
+            #256x256/photo/tx_000000000000_ready/cup/n03063073_5868.jpg 0 ......
     elif args.dataset == 'tu_berlin':
         if skim == 'sketch':
             file_ls_file = args.data_path + '/TUBerlin/zeroshot/png_ready_filelist_zero.txt'
@@ -122,7 +128,9 @@ def get_file_list_iccv(args, rootpath, skim, split):
     with open(file_ls_file, 'r') as fh:
         file_content = fh.readlines()
     file_ls = np.array([' '.join(ff.strip().split()[:-1]) for ff in file_content])
+            #256x256/photo/tx_000000000000_ready/cup/n03063073_5868.jpg ......
     labels = np.array([int(ff.strip().split()[-1]) for ff in file_content])
+    #0 ..... (the class id matched sketchy)
     file_names = np.array([(rootpath + x) for x in file_ls])
 
     # 对验证的样本数量进行缩减
