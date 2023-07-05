@@ -61,7 +61,7 @@ def get_all_train_file(args, skim) -> Tuple[List[str],List[str],List[str]] :
 
     return file_ls, labels, cname
 
-# ?deprecated
+#? deprecated
 def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
     file_list = []
     for i in class_list:
@@ -87,12 +87,12 @@ def get_file_iccv(labels, rootpath, class_name, cname, number, file_ls):
     ind_rand = np.random.randint(1, len(ind), number) # shape = (number)
     ind_ori = ind[ind_rand] # shape = (number,1)
     #ind_ori = ind[ind_rand].reshape(number)
-    # ? file_ls.shape = (x), ind_ori.shape = (number,1), fancy indexing 规则
+    #? file_ls.shape = (x), ind_ori.shape = (number,1), fancy indexing 规则
     files = file_ls[ind_ori][0][0]
     full_path = os.path.join(rootpath, files)
     return full_path
 
-#iccv?
+#? iccv
 def get_file_list_iccv(args, rootpath, skim, split):
 
     if args.dataset == 'sketchy_extend':
@@ -198,15 +198,16 @@ def preprocess(image_path, img_type="im"):
     imstd = [0.5, 0.5, 0.5]
 
     transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(immean, imstd)
+        transforms.ToTensor(), #[0,1]
+        transforms.Normalize(immean, imstd) # [-1,1]
     ])
 
     if img_type == 'im':
-        return transform(Image.open(image_path).resize((224, 224)).convert('RGB'))
+        return transform(Image.open(image_path).resize((224, 224)).convert('RGB')) # RGB default
     else:
         # 对sketch 进行crop，等比例扩大到224
-        img = cv2.imread(image_path)
+        #? 数据增强
+        img = cv2.imread(image_path) #BGR default
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = remove_white_space_image(img, 10)
         img = resize_image_by_ratio(img, 224)
@@ -230,8 +231,10 @@ def remove_white_space_image(img_np: np.ndarray, padding: int):
     #     img_np = img_np.astype("uint8")
 
     h, w, c = img_np.shape
-    img_np_single = np.sum(img_np, axis=2)
+    img_np_single = np.sum(img_np, axis=2) # RGB channel sum
     Y, X = np.where(img_np_single <= 300)  # max = 300
+    #? `where` implenmtation
+    #? is 300 enough?
     ymin, ymax, xmin, xmax = np.min(Y), np.max(Y), np.min(X), np.max(X)
     img_cropped = img_np[max(0, ymin - padding):min(h, ymax + padding), max(0, xmin - padding):min(w, xmax + padding),
                   :]
@@ -269,8 +272,10 @@ def make_img_square(img_np: np.ndarray):
             delta1 = (h - w) // 2
             delta2 = (h - w) - delta1
 
-            white1 = np.ones((h, delta1)) * np.max(img_np)
-            white2 = np.ones((h, delta2)) * np.max(img_np)
+            white1 = np.ones((h, delta1)) * np.max(img_np) #left padding
+            #? why np.max instead of 255
+            #clear: 255 or 1.0
+            white2 = np.ones((h, delta2)) * np.max(img_np) #right padding
 
             new_img = np.hstack([white1, img_np, white2])
             return new_img
@@ -290,6 +295,7 @@ def make_img_square(img_np: np.ndarray):
             delta2 = (h - w) - delta1
 
             white1 = np.ones((h, delta1, c), dtype=img_np.dtype) * np.max(img_np)
+            #? why dtype is explicit
             white2 = np.ones((h, delta2, c), dtype=img_np.dtype) * np.max(img_np)
 
             new_img = np.hstack([white1, img_np, white2])

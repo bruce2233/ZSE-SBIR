@@ -11,7 +11,7 @@ def load_para(args):
         args: train.py args
 
     Returns:
-        train_class_label:["table","teapot","harp",......]
+        train_class_label:["table","teapot","harp",......], index: int
     """
     # test class labels
     if args.dataset == 'sketchy_extend':

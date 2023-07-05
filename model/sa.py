@@ -191,6 +191,8 @@ class Self_Attention(nn.Module):
             checkpoint = torch.load("./sam_ViT-B_16.pth")
             cur = self.model.state_dict()
             new = {k: v for k, v in checkpoint.items() if k in cur.keys() and 'mlp_head' not in k}
+            #? 为什么去掉mlp_head?
+            #? 'if k in cur.keys()' necessary?
             cur.update(new)
             self.model.load_state_dict(cur)
 

@@ -8,6 +8,7 @@ class Relation_Network(nn.Module):
         super(Relation_Network, self).__init__()
 
         # 1.0
+        # three Linear MLP
         if anchor == 49:
             self.rn = nn.Sequential(
                 nn.Linear(anchor * anchor, 343, bias=True),
