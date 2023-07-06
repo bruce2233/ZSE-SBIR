@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--data_path",
+                "./datasets",
+                "--dataset",
+                "sketchy_extend",
+                "--test_class",
+                "test_class_sketchy25",
+                "--batch",
+                "15",
+                "--epoch",
+                "30",
+                "-s",
+                "./checkpoints/sketchy_ext",
+                "-c",
+                "0",
+                "-r",
+                "rn",
+            ]
+        }
+    ]
+}
