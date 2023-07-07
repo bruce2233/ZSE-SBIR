@@ -13,7 +13,7 @@ class MultiHeadDotProductAttention(nn.Module):
         self.heads = heads
         self.scale = (dim / heads) ** -0.5
 
-        self.to_qkv = nn.Linear(dim, dim * 3)  //W_q,W_k,W_v
+        self.to_qkv = nn.Linear(dim, dim * 3)  #W_q,W_k,W_v
 
         self.to_out = nn.Sequential(
             nn.Linear(dim, dim),
@@ -110,9 +110,9 @@ class Encoder(nn.Module):
         self.num_layers = num_layers
         self.mlp_dim = mlp_dim
         self.inputs_positions = inputs_positions
-        self.dropout_rate = dropout_rate
+        self.dropout_rate = dropout_rate #0.1
         self.train_flag = train
-        self.encoder_norm = nn.LayerNorm(input_shape)
+        self.encoder_norm = nn.LayerNorm(input_shape) #input_shape=768
         self.layers = nn.ModuleList([])
         for _ in range(num_layers):
             self.layers.append(nn.ModuleList([Encoder1DBlock(input_shape, heads, mlp_dim)]))
@@ -146,26 +146,27 @@ class ViTPatch(nn.Module):
         self.embedding = nn.Conv2d(channels, hidden_size, patch_size, patch_size)
         self.scale = Scale_Embedding()
 
-        self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, hidden_size))
-        self.cls = nn.Parameter(torch.randn(1, 1, hidden_size))
+        self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, hidden_size)) #? 3D? shape = (1,197,768) num_pathches=16
+        self.cls = nn.Parameter(torch.randn(1, 1, hidden_size)) #shape = (1,1,768)
         self.dropout = nn.Dropout(emb_dropout)
-        self.transformer = Encoder(hidden_size, depth, heads, mlp_dim, dropout_rate=dropout)
+        self.transformer = Encoder(hidden_size, depth, heads, mlp_dim, dropout_rate=dropout) #input_shape=hidden_size
         self.to_cls_token = nn.Identity()
         # self.mlp_head = nn.Linear(hidden_size, num_classes)
 
     def forward(self, img, mask=None):
-        x1 = self.embedding(img)
-        x2 = self.scale(img)
+        x1 = self.embedding(img) #shape = (60,768, 14,14) (4b, hidden_size, num_patches, num_patches)
+        x2 = self.scale(img) #shape = same as before
+        #? why '+'
         x = (x1 + x2) / 2
 
         x = rearrange(x, 'b c h w  -> b (h w) c')
-        b, n, _ = x.shape
+        b, n, _ = x.shape # n = h*w x.shape = (4b, num_patches**2, hidden_size) 
 
-        cls_tokens = repeat(self.cls, '() n d -> b n d', b=b)
-        x = torch.cat((cls_tokens, x), dim=1)
+        cls_tokens = repeat(self.cls, '() n d -> b n d', b=b) #
+        x = torch.cat((cls_tokens, x), dim=1) #(4b, 1, hidden_size) cat (4b, num_pathces**2, hidden_size) cls_token in the pixel dimension
         x += self.pos_embedding[:, :(n + 1)]
         x = self.dropout(x)
-        x, left_tokens, idxs = self.transformer(x)
+        x, left_tokens, idxs = self.transformer(x) 
 
         # x1 = self.to_cls_token(x[:, 0])
         # return x1, x[:, 1:]
