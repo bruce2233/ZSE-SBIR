@@ -1,1 +1,5 @@
 datasets/Sketchy
+**/__pycache__
+*.pth
+**/log
+**/logs
