@@ -20,7 +20,8 @@ def calculate(distance, class_same, test=None):
         start = time.time()
 
         aps_all = Parallel(n_jobs=num_cores)(
-            delayed(voc_eval)(sort_label[iq]) for iq in range(distance.shape[0]))
+            delayed(voc_eval)(sort_label[iq]) for iq in range(distance.shape[0])) 
+            #sort_label[iq] means eval and sort_label[iq][item] means 
         aps_200 = Parallel(n_jobs=num_cores)(
             delayed(voc_eval)(sort_label[iq], 200) for iq in range(distance.shape[0]))
         map_all = np.nanmean(aps_all)
@@ -39,8 +40,8 @@ def calculate(distance, class_same, test=None):
 
 
 def voc_eval(sort_class_same, top=None):
-    tp = sort_class_same
-    tot_pos = np.sum(tp)
+    tp = sort_class_same #?eval or real?
+    tot_pos = np.sum(tp) #total_positive
     fp = np.logical_not(tp)
     tot = tp.shape[0]
     if top is not None:

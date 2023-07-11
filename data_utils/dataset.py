@@ -83,7 +83,7 @@ class ValidSet(data.Dataset):
     def __getitem__(self, index):
         #index: class_name
         label = self.cls[index]  # label 为数字
-        file_name = self.file_names[index]
+        file_name = self.file_names[index] #? file_name.shape?
         if self.path:
             image = file_name
         else:

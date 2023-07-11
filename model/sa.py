@@ -22,10 +22,11 @@ class MultiHeadDotProductAttention(nn.Module):
 
     def forward(self, x, keep_rate, mask=None):
         b, n, c, h = *x.shape, self.heads
-        qkv = self.to_qkv(x).chunk(3, dim=-1)
-        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=h), qkv)
+        qkv = self.to_qkv(x).chunk(3, dim=-1) #? dim=-1 same as 0?
+        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=h), qkv) #q.shape = (60,12, 197,64), 768=12*64
+        #b = batch_size, n = num_patches**2+1, h = heads, d=head_dimension
 
-        dots = torch.einsum('bhid,bhjd->bhij', q, k) * self.scale
+        dots = torch.einsum('bhid,bhjd->bhij', q, k) * self.scale #q*k^T
 
         # if mask is not None:
         #     mask = F.pad(mask.flatten(1), (1, 0), value=True)
@@ -44,10 +45,10 @@ class MultiHeadDotProductAttention(nn.Module):
         left_tokens = n-1
         if keep_rate < 1:
             left_tokens = math.ceil(keep_rate * left_tokens)
-            cls_attn = attn[:, :, 0, 1:]  # [B, H, N-1]
-            cls_attn = cls_attn.mean(dim=1)  # [B, N-1]
-            _, idx = torch.topk(cls_attn, left_tokens, dim=1, largest=True, sorted=True)  # [B, left_tokens]
-            idx, _ = torch.sort(idx)
+            cls_attn = attn[:, :, 0, 1:]  # [B, H, N-1] q_class*k^T
+            cls_attn = cls_attn.mean(dim=1)  # [B, N-1] #? head mean
+            _, idx = torch.topk(cls_attn, left_tokens, dim=1, largest=True, sorted=True)  # ix.shape=(B, left_tokens)
+            idx, _ = torch.sort(idx)  
             index = idx.unsqueeze(-1).expand(-1, -1, c)  # [B, left_tokens, C]
 
             return x, index, idx, cls_attn, left_tokens
@@ -59,7 +60,7 @@ class FeedForward(nn.Module):
     def __init__(self, dim, hidden_dim, dropout=0.):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(dim, hidden_dim),
+            nn.Linear(dim, hidden_dim), #dim=input_shape, hidden_dim=mlp_dim
             nn.GELU(),
             nn.Dropout(dropout),
             nn.Linear(hidden_dim, dim),
@@ -83,15 +84,15 @@ class Encoder1DBlock(nn.Module):
         self.layer_norm_input = nn.LayerNorm(input_shape)
         self.layer_norm_out = nn.LayerNorm(input_shape)
 
-        self.attention = MultiHeadDotProductAttention(input_shape, heads=heads)
-        self.mlp = FeedForward(input_shape, mlp_dim, dropout_rate)
+        self.attention = MultiHeadDotProductAttention(input_shape, heads=heads) #input_shape=768
+        self.mlp = FeedForward(input_shape, mlp_dim, dropout_rate) #mlp_dim=3072=input_shape*3
         self.drop_out_attention = nn.Dropout(attention_dropout_rate)
 
     def forward(self, inputs, keep_rate):
         x = self.layer_norm_input(inputs)
         x, index, idx, cls_attn, left_tokens = self.attention(x, keep_rate)
         x = self.drop_out_attention(x)
-        x = x + inputs
+        x = x + inputs #Add
 
         if index is not None:
             # B, N, C = x.shape
@@ -115,9 +116,10 @@ class Encoder(nn.Module):
         self.encoder_norm = nn.LayerNorm(input_shape) #input_shape=768
         self.layers = nn.ModuleList([])
         for _ in range(num_layers):
+        #multi encoder layer
             self.layers.append(nn.ModuleList([Encoder1DBlock(input_shape, heads, mlp_dim)]))
 
-        self.keep_rate = (1, ) * 12
+        self.keep_rate = (1, ) * 12# (1,)*num_layers
         # self.keep_rate = (1, 1, 1, 0.9) + (1, 1, 0.9) + (1, 1, 0.9) + (1, 1)    # 196 -> 177 -> 160 -> 144
 
     def forward(self, img, mask=None):
@@ -126,7 +128,7 @@ class Encoder(nn.Module):
         idxs = []
 
         for i, layer in enumerate(self.layers):
-            x, left_token, idx = layer[0](x, self.keep_rate[i])
+            x, left_token, idx = layer[0](x, self.keep_rate[i]) #? why not layer[i]?
             left_tokens.append(left_token)
             idxs.append(idx)
 
@@ -144,7 +146,7 @@ class ViTPatch(nn.Module):
         self.patch_size = patch_size
         self.hidden_size = hidden_size
         self.embedding = nn.Conv2d(channels, hidden_size, patch_size, patch_size)
-        self.scale = Scale_Embedding()
+        self.scale = Scale_Embedding() #channel 3->768
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, hidden_size)) #? 3D? shape = (1,197,768) num_pathches=16
         self.cls = nn.Parameter(torch.randn(1, 1, hidden_size)) #shape = (1,1,768)

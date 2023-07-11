@@ -54,7 +54,7 @@ class Encoder(nn.Module):
 
     def __init__(self, layer, N):
         super(Encoder, self).__init__()
-        self.layers = clones(layer, N)
+        self.layers = clones(layer, N) #layers unused
         self.layer1 = clones(layer, N)
         self.layer2 = clones(layer, N)
 
@@ -62,6 +62,7 @@ class Encoder(nn.Module):
         for layer1, layer2 in zip(self.layer1, self.layer2):
             # 在此交换Q
             # layer1 处理 sk
+            #? exchagne K instead of Q in the paper?
             x_sk1 = layer1(x_sk, x_im, x_sk, mask)
             # layer2 处理im
             x_im = layer2(x_im, x_sk, x_im, mask)
@@ -74,7 +75,7 @@ def attention(query, key, value, dropout=None, mask=None, pos=None):
     dk = dv = dmodel/h = 64,h=8
     """
     d_k = query.size(-1)
-    scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
+    scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)  #einsum('bhid, bhjd -> bhij', q, k)
     if mask is not None:
         scores = scores.masked_fill(mask == 0, -1e9)
 
@@ -115,8 +116,8 @@ class MultiHeadedAttention(nn.Module):
 
         # size(batch,h,seq,dk)
         query, key, value = \
-            [lin(x).view(nbatches, -1, self.h, self.d_k).transpose(1, 2)
-             for lin, x in zip(self.linears, (query, key, value))]
+            [lin(x).view(nbatches, -1, self.h, self.d_k).transpose(1, 2) #rearrange('(b n h d)-> b h n d')
+             for lin, x in zip(self.linears, (query, key, value))] #3 linear used
 
         # 2) Apply attention on all the projected vectors in batch.
         x, self.attn = attention(query, key, value, mask=mask,
