@@ -139,7 +139,8 @@ def get_file_list_iccv(args, rootpath, skim, split):
         if args.testall:
             index = [i for i in range(0, file_names.shape[0], 1)]  # 15229
         else:
-            index = [i for i in range(0, file_names.shape[0], 20)]   # 762
+            # index = [i for i in range(0, file_names.shape[0], 20)]   # 762 #debug
+            index = [i for i in range(0, file_names.shape[0], 200)]   # 762
         file_names = file_names[index[:]]
         labels = labels[index[:]]
 
@@ -147,7 +148,8 @@ def get_file_list_iccv(args, rootpath, skim, split):
         if args.testall:
             index = [i for i in range(0, file_names.shape[0], 1)]  # 17101
         else:
-            index = [i for i in range(0, file_names.shape[0], 10)]  # 1711
+            # index = [i for i in range(0, file_names.shape[0], 10)]  # 1711 #debug
+            index = [i for i in range(0, file_names.shape[0], 100)]  # 1711
         file_names = file_names[index[:]]
         labels = labels[index[:]]
 
