@@ -16,7 +16,7 @@ class Model(nn.Module):
         self.ca = Cross_Attention(args=args, h=args.head, n=args.number, d_model=args.d_model, d_ff=args.d_ff, dropout=0.1)
         self.rn = Relation_Network(args.anchor_number, dropout=0.1)
         self.conv2d = nn.Conv2d(768, 512, 2, 2)
-
+        self.output4VQGAN = nn.ConvTranspose2d(768, 256, kernel_size=19)
 
     def forward(self, sk, im, stage='train', only_sa=False):
 
@@ -31,13 +31,14 @@ class Model(nn.Module):
             batch = token_fea.size(0)
 
             token_fea = token_fea.view(batch, 768, 14, 14)
-            down_fea = self.conv2d(token_fea) #nn.Conv2d(768, 512, 2, 2)
-            down_fea = down_fea.view(batch, 512, 7*7)
-            down_fea = down_fea.transpose(1, 2)  # [4b, 49, 512]
-
+            down_fea = self.output4VQGAN(token_fea) #nn.ConvTranspose2d(768,256, 19) (b, 256,32,32)
+            down_fea = down_fea.view(batch, 256, 32*32)
+            down_fea = down_fea.transpose(1, 2)  # [4b, patch_num**2, d_fea]
+            print(down_fea.shape)
+            
             sk_fea = down_fea[:batch // 2]
             im_fea = down_fea[batch // 2:]
-            cos_scores = cos_similar(sk_fea, im_fea)  # [2b, 49, 49]
+            cos_scores = cos_similar(sk_fea, im_fea)  # [2b, 1024, 1024]
             cos_scores = cos_scores.view(batch // 2, -1)
             rn_scores = self.rn(cos_scores)  # [2b, 1]
 
@@ -59,9 +60,9 @@ class Model(nn.Module):
                 token_fea = token_fea.view(batch, 768, 14, 14)
                 
                 #? down_fea is not in paper
-                down_fea = self.conv2d(token_fea)
-                down_fea = down_fea.view(batch, 512, 7 * 7)
-                down_fea = down_fea.transpose(1, 2)  # [2b, 49, 512]
+                down_fea = self.output4VQGAN(token_fea) #nn.ConvTranspose2d(768,256, 19) (b, 256,32,32)
+                down_fea = down_fea.view(batch, 256, 32*32)
+                down_fea = down_fea.transpose(1, 2)  # [4b, patch_num**2, d_fea]
 
                 sk_fea = down_fea[:batch // 2]
                 im_fea = down_fea[batch // 2:]
