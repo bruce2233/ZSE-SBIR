@@ -46,4 +46,4 @@ class Option:
 
 
     def parse(self):
-        return self.parser.parse_args()
+        return self.parser.parse_args(args=[]) #MUST use args=[] compatible .ipynb

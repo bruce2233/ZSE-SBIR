@@ -75,7 +75,12 @@ class Scale_Embedding(nn.Module):
 
 
 def cos_similar(p: Tensor, q: Tensor):
-    sim_matrix = p.matmul(q.transpose(-2, -1))
+    '''
+    p: (196,768)
+    q: (b,196,768)
+    return: (b,196,768)
+    '''
+    sim_matrix = p.matmul(q.transpose(-2, -1)) #matrix multiply
     a = torch.norm(p, p=2, dim=-1) #(2b,49)
     b = torch.norm(q, p=2, dim=-1)
     sim_matrix /= a.unsqueeze(-1) #broadcast

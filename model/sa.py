@@ -175,7 +175,7 @@ class ViTPatch(nn.Module):
 
         return x, left_tokens, idxs
 
-
+#sk im all in one
 class Self_Attention(nn.Module):
     def __init__(self, d_model=768, cls_number=100, pretrained=True):
         super(Self_Attention, self).__init__()

@@ -9,12 +9,12 @@ from utils.util import setup_seed, load_checkpoint
 
 from utils.valid import valid_cls
 
-def test():
+def test(args):
     # prepare data
     sk_valid_data, im_valid_data = load_data_test(args)
 
     # prepare model
-    model = Model(args.d_model, args)
+    model = Model(args)
     model = model.half()
 
     if args.load is not None:
@@ -41,4 +41,4 @@ if __name__ == '__main__':
     print("current cuda: " + args.choose_cuda)
     setup_seed(args.seed)
 
-    test()
+    test(args)
