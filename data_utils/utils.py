@@ -93,8 +93,11 @@ def get_file_iccv(labels, rootpath, class_name, cname, number, file_ls):
     return full_path
 
 #? iccv
-def get_file_list_iccv(args, rootpath, skim, split):
-
+def get_file_list_iccv(args, rootpath, skim, split,shrink_sk, shrink_im):
+    '''
+    shrink_sk: 20 default, 762 sketches
+    shrink_im: 10 default, 1771 images
+    '''
     if args.dataset == 'sketchy_extend':
         #difference between test_class_sketchy25 and test_class_sketchy21
         if args.test_class == "test_class_sketchy25":
@@ -140,7 +143,7 @@ def get_file_list_iccv(args, rootpath, skim, split):
             index = [i for i in range(0, file_names.shape[0], 1)]  # 15229
         else:
             # index = [i for i in range(0, file_names.shape[0], 20)]   # 762 #debug
-            index = [i for i in range(0, file_names.shape[0], 200)]   # 762
+            index = [i for i in range(0, file_names.shape[0], shrink_sk)]   # 762 when 20 default #new index i-> old index i*200 valid dataset
         file_names = file_names[index[:]]
         labels = labels[index[:]]
 
@@ -149,7 +152,7 @@ def get_file_list_iccv(args, rootpath, skim, split):
             index = [i for i in range(0, file_names.shape[0], 1)]  # 17101
         else:
             # index = [i for i in range(0, file_names.shape[0], 10)]  # 1711 #debug
-            index = [i for i in range(0, file_names.shape[0], 100)]  # 1711
+            index = [i for i in range(0, file_names.shape[0], shrink_im)]  # 171
         file_names = file_names[index[:]]
         labels = labels[index[:]]
 

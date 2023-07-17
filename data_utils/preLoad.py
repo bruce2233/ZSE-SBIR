@@ -88,9 +88,9 @@ class PreLoad:
             NameError("Dataset is not implemented")
 
         self.all_valid_or_test_sketch, self.all_valid_or_test_sketch_label = \
-            get_file_list_iccv(args, train_dir, "sketch", "test")
+            get_file_list_iccv(args, train_dir, "sketch", "test",args.valid_shrink_sk, args.valid_shrink_im)
         self.all_valid_or_test_image, self.all_valid_or_test_image_label = \
-            get_file_list_iccv(args, train_dir, "images", "test")
+            get_file_list_iccv(args, train_dir, "images", "test",args.valid_shrink_sk, args.valid_shrink_im)
 
         self.all_train_sketch, self.all_train_sketch_label, self.all_train_sketch_cls_name =\
             get_all_train_file(args, "sketch")
