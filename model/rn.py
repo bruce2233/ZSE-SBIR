@@ -87,3 +87,4 @@ def cos_similar(p: Tensor, q: Tensor):
     sim_matrix /= b.unsqueeze(-2)
     sim_matrix = torch.where(torch.isnan(sim_matrix), torch.full_like(sim_matrix, 0), sim_matrix)
     return sim_matrix
+ 

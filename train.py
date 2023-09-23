@@ -67,7 +67,7 @@ def train():
             optimizer.step()
             optimizer.zero_grad()
             #for debug
-            break
+            #break
             
             # log
             step = index + 1

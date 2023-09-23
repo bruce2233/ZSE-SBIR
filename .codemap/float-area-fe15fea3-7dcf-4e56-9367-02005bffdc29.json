@@ -1,0 +1,107 @@
+{
+  "type": "float-area",
+  "_widgets": [
+    [
+      {
+        "widget": {
+          "constructionOptions": {
+            "factoryId": "code-editor-opener",
+            "options": {
+              "kind": "navigatable",
+              "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/lr_scheduler.py",
+              "floatAreaId": "fe15fea3-7dcf-4e56-9367-02005bffdc29"
+            }
+          },
+          "innerWidgetState": {
+            "cursorState": [
+              {
+                "inSelectionMode": false,
+                "selectionStart": {
+                  "lineNumber": 6,
+                  "column": 36
+                },
+                "position": {
+                  "lineNumber": 6,
+                  "column": 36
+                }
+              }
+            ],
+            "viewState": {
+              "scrollLeft": 0,
+              "firstPosition": {
+                "lineNumber": 3,
+                "column": 1
+              },
+              "firstPositionDeltaTop": -12
+            },
+            "contributionsState": {
+              "editor.contrib.folding": {
+                "lineCount": 35,
+                "provider": "indent",
+                "foldedImports": false
+              },
+              "editor.contrib.wordHighlighter": false
+            }
+          }
+        },
+        "width": 586,
+        "height": 450,
+        "spacing": 0
+      },
+      {
+        "widget": {
+          "constructionOptions": {
+            "factoryId": "code-editor-opener",
+            "options": {
+              "kind": "navigatable",
+              "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/util.py",
+              "floatAreaId": "fe15fea3-7dcf-4e56-9367-02005bffdc29"
+            }
+          },
+          "innerWidgetState": {
+            "cursorState": [
+              {
+                "inSelectionMode": false,
+                "selectionStart": {
+                  "lineNumber": 1,
+                  "column": 1
+                },
+                "position": {
+                  "lineNumber": 1,
+                  "column": 1
+                }
+              }
+            ],
+            "viewState": {
+              "scrollLeft": 0,
+              "firstPosition": {
+                "lineNumber": 16,
+                "column": 1
+              },
+              "firstPositionDeltaTop": -15
+            },
+            "contributionsState": {
+              "editor.contrib.folding": {
+                "lineCount": 158,
+                "provider": "indent",
+                "foldedImports": false
+              },
+              "editor.contrib.wordHighlighter": false
+            }
+          }
+        },
+        "width": 586,
+        "height": 450,
+        "spacing": 0
+      }
+    ]
+  ],
+  "_widths": [
+    586
+  ],
+  "_modelData": {
+    "connections": [],
+    "annotations": [],
+    "highlights": []
+  }
+}

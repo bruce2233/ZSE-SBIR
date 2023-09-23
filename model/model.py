@@ -3,7 +3,6 @@ import torch.nn as nn
 from .sa import Self_Attention
 from .ca import Cross_Attention
 from .rn import Relation_Network, cos_similar
-import os
 from options import Option
 
 class Model(nn.Module):

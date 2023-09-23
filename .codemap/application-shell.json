@@ -1,0 +1,728 @@
+{
+  "bottomPanel": {
+    "config": {
+      "main": {
+        "type": "tab-area",
+        "widgets": [
+          {
+            "constructionOptions": {
+              "factoryId": "problems"
+            },
+            "innerWidgetState": {}
+          }
+        ],
+        "currentIndex": 0
+      }
+    },
+    "expanded": false
+  },
+  "leftPanel": {
+    "type": "sidepanel",
+    "items": [
+      {
+        "widget": {
+          "constructionOptions": {
+            "factoryId": "explorer-view-container"
+          },
+          "innerWidgetState": {
+            "parts": [
+              {
+                "widget": {
+                  "constructionOptions": {
+                    "factoryId": "files"
+                  },
+                  "innerWidgetState": {
+                    "decorations": {
+                      "/g:/github/ZSE-SBIR": [
+                        {
+                          "fontData": {
+                            "color": "rgba(255, 148, 0, .5)"
+                          }
+                        }
+                      ],
+                      "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers": [
+                        {
+                          "fontData": {
+                            "color": "rgba(255, 148, 0, .5)"
+                          }
+                        }
+                      ],
+                      "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming": [
+                        {
+                          "fontData": {
+                            "color": "rgba(255, 148, 0, .5)"
+                          }
+                        }
+                      ],
+                      "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/lr_scheduler.py": [
+                        {
+                          "fontData": {
+                            "color": "rgba(255, 148, 0, 1)"
+                          }
+                        }
+                      ],
+                      "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/util.py": [
+                        {
+                          "fontData": {
+                            "color": "rgba(255, 148, 0, 1)"
+                          }
+                        }
+                      ]
+                    },
+                    "root": {
+                      "id": "WorkspaceNodeId",
+                      "name": "WorkspaceNode",
+                      "children": [
+                        {
+                          "id": "/g:/github/ZSE-SBIR",
+                          "uri": "file:///g%3A/github/ZSE-SBIR",
+                          "expanded": true,
+                          "selected": false,
+                          "children": [
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/__pycache__",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/__pycache__",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/.codemap",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/.codemap",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/.env",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/.env",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/.ipynb_checkpoints",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/.ipynb_checkpoints",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/.vscode",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/.vscode",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/checkpoint",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/checkpoint",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/checkpoints",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/checkpoints",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/data_utils",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/data_utils",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/datasets",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/datasets",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/docs",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/docs",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/images",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/images",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/log",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/log",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/logs",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/logs",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/model",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/model",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/sketchy_ext",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/sketchy_ext",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/taming",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers",
+                              "expanded": true,
+                              "selected": false,
+                              "children": [
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/__pycache__",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/__pycache__",
+                                  "expanded": false,
+                                  "selected": false,
+                                  "children": [],
+                                  "stat": {
+                                    "type": 2
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/assets",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/assets",
+                                  "expanded": false,
+                                  "selected": false,
+                                  "children": [],
+                                  "stat": {
+                                    "type": 2
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/configs",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/configs",
+                                  "expanded": false,
+                                  "selected": false,
+                                  "children": [],
+                                  "stat": {
+                                    "type": 2
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/data",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/data",
+                                  "expanded": false,
+                                  "selected": false,
+                                  "children": [],
+                                  "stat": {
+                                    "type": 2
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/logs",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/logs",
+                                  "expanded": false,
+                                  "selected": false,
+                                  "children": [],
+                                  "stat": {
+                                    "type": 2
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/scripts",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/scripts",
+                                  "expanded": false,
+                                  "selected": false,
+                                  "children": [],
+                                  "stat": {
+                                    "type": 2
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming",
+                                  "expanded": true,
+                                  "selected": false,
+                                  "children": [
+                                    {
+                                      "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/__pycache__",
+                                      "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/__pycache__",
+                                      "expanded": false,
+                                      "selected": false,
+                                      "children": [],
+                                      "stat": {
+                                        "type": 2
+                                      }
+                                    },
+                                    {
+                                      "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/data",
+                                      "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/data",
+                                      "expanded": false,
+                                      "selected": false,
+                                      "children": [],
+                                      "stat": {
+                                        "type": 2
+                                      }
+                                    },
+                                    {
+                                      "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/models",
+                                      "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/models",
+                                      "expanded": false,
+                                      "selected": false,
+                                      "children": [],
+                                      "stat": {
+                                        "type": 2
+                                      }
+                                    },
+                                    {
+                                      "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/modules",
+                                      "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/modules",
+                                      "expanded": false,
+                                      "selected": false,
+                                      "children": [],
+                                      "stat": {
+                                        "type": 2
+                                      }
+                                    },
+                                    {
+                                      "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/lr_scheduler.py",
+                                      "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/lr_scheduler.py",
+                                      "selected": true,
+                                      "focus": true,
+                                      "stat": {
+                                        "type": 1
+                                      }
+                                    },
+                                    {
+                                      "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/util.py",
+                                      "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/taming/util.py",
+                                      "selected": true,
+                                      "focus": false,
+                                      "stat": {
+                                        "type": 1
+                                      }
+                                    }
+                                  ],
+                                  "focus": false,
+                                  "stat": {
+                                    "type": 2,
+                                    "ctime": 1689483585901,
+                                    "mtime": 1689486943414,
+                                    "size": 0
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/environment.yaml",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/environment.yaml",
+                                  "selected": false,
+                                  "stat": {
+                                    "type": 1
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/License.txt",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/License.txt",
+                                  "selected": false,
+                                  "stat": {
+                                    "type": 1
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/main.py",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/main.py",
+                                  "selected": false,
+                                  "stat": {
+                                    "type": 1
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/nohup.out",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/nohup.out",
+                                  "selected": false,
+                                  "stat": {
+                                    "type": 1
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/README.md",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/README.md",
+                                  "selected": false,
+                                  "stat": {
+                                    "type": 1
+                                  }
+                                },
+                                {
+                                  "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/setup.py",
+                                  "uri": "file:///g%3A/github/ZSE-SBIR/taming-transformers/setup.py",
+                                  "selected": false,
+                                  "stat": {
+                                    "type": 1
+                                  }
+                                }
+                              ],
+                              "focus": false,
+                              "stat": {
+                                "type": 2,
+                                "ctime": 1689483280419,
+                                "mtime": 1694595095212,
+                                "size": 0
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/utils",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/utils",
+                              "expanded": false,
+                              "selected": false,
+                              "children": [],
+                              "stat": {
+                                "type": 2
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/.dockerignore",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/.dockerignore",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/.gitignore",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/.gitignore",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/cloudflare.log",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/cloudflare.log",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/Dockerfile",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/Dockerfile",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/env.md",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/env.md",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/idea1_vqgan_patch_replaced_rgb.ipynb",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/idea1_vqgan_patch_replaced_rgb.ipynb",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/idea1.ipynb",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/idea1.ipynb",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/LICENSE",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/LICENSE",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/nohup.out",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/nohup.out",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/options.py",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/options.py",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/play.ipynb",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/play.ipynb",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/play.py",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/play.py",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/README.md",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/README.md",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/requirements.txt",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/requirements.txt",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/sam_ViT-B_16.pth",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/sam_ViT-B_16.pth",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/test.py",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/test.py",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/train.py",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/train.py",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            },
+                            {
+                              "id": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/train.sh",
+                              "uri": "file:///g%3A/github/ZSE-SBIR/train.sh",
+                              "selected": false,
+                              "stat": {
+                                "type": 1
+                              }
+                            }
+                          ],
+                          "visible": false,
+                          "focus": false,
+                          "stat": {
+                            "type": 2,
+                            "ctime": 1686735867000,
+                            "mtime": 1695053759336,
+                            "size": 0
+                          }
+                        }
+                      ],
+                      "visible": false,
+                      "selected": false
+                    },
+                    "model": {
+                      "selection": {
+                        "selectionStack": [
+                          {
+                            "focus": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/util.py",
+                            "node": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/util.py",
+                            "type": 1
+                          },
+                          {
+                            "focus": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/lr_scheduler.py",
+                            "node": "/g:/github/ZSE-SBIR:/g:/github/ZSE-SBIR/taming-transformers/taming/lr_scheduler.py",
+                            "type": 1
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "partId": "{\"factoryId\":\"files\"}",
+                "collapsed": false,
+                "hidden": false,
+                "relativeSize": 1
+              },
+              {
+                "widget": {
+                  "constructionOptions": {
+                    "factoryId": "plugin-view",
+                    "options": {
+                      "id": "plugin-view:go.explorer",
+                      "viewId": "go.explorer"
+                    }
+                  },
+                  "innerWidgetState": {
+                    "label": "go",
+                    "widgets": []
+                  }
+                },
+                "partId": "{\"factoryId\":\"plugin-view\",\"options\":{\"id\":\"plugin-view:go.explorer\",\"viewId\":\"go.explorer\"}}",
+                "collapsed": true,
+                "hidden": true
+              },
+              {
+                "widget": {
+                  "constructionOptions": {
+                    "factoryId": "plugin-view",
+                    "options": {
+                      "id": "plugin-view:npm",
+                      "viewId": "npm"
+                    }
+                  },
+                  "innerWidgetState": {
+                    "label": "NPM Scripts",
+                    "widgets": []
+                  }
+                },
+                "partId": "{\"factoryId\":\"plugin-view\",\"options\":{\"id\":\"plugin-view:npm\",\"viewId\":\"npm\"}}",
+                "collapsed": true,
+                "hidden": true
+              }
+            ],
+            "title": {
+              "label": "资源树",
+              "iconClass": "codemap-files-icon",
+              "closeable": true
+            }
+          }
+        },
+        "rank": 100,
+        "expanded": true
+      },
+      {
+        "widget": {
+          "constructionOptions": {
+            "factoryId": "search-in-workspace"
+          },
+          "innerWidgetState": {
+            "matchCaseState": {
+              "className": "match-case",
+              "enabled": true,
+              "title": "Match Case"
+            },
+            "wholeWordState": {
+              "className": "whole-word",
+              "enabled": true,
+              "title": "Match Whole Word"
+            },
+            "regExpState": {
+              "className": "use-regexp",
+              "enabled": false,
+              "title": "Use Regular Expression"
+            },
+            "includeIgnoredState": {
+              "className": "include-ignored fa fa-eye",
+              "enabled": false,
+              "title": "Include Ignored Files"
+            },
+            "showSearchDetails": false,
+            "searchInWorkspaceOptions": {
+              "matchCase": true,
+              "matchWholeWord": true,
+              "useRegExp": false,
+              "includeIgnored": false,
+              "include": [],
+              "exclude": [],
+              "maxResults": 2000
+            },
+            "searchTerm": "",
+            "replaceTerm": "",
+            "showReplaceField": false
+          }
+        },
+        "rank": 200,
+        "expanded": false
+      }
+    ],
+    "size": 383
+  },
+  "rightPanel": {
+    "type": "sidepanel",
+    "items": []
+  },
+  "activeWidgetId": "undefined:search-in-workspace"
+}

@@ -1,0 +1,28 @@
+2023-07-19T16:42:54Z INF Starting tunnel tunnelID=48da039f-7e2f-48ad-a6c5-24ae0e274056
+2023-07-19T16:42:54Z INF Version 2023.7.1
+2023-07-19T16:42:54Z INF GOOS: linux, GOVersion: go1.19.6, GoArch: amd64
+2023-07-19T16:42:54Z INF Settings: map[config:/home/bruce/.cloudflared/config.yml cred-file:/home/bruce/.cloudflared/48da039f-7e2f-48ad-a6c5-24ae0e274056.json credentials-file:/home/bruce/.cloudflared/48da039f-7e2f-48ad-a6c5-24ae0e274056.json p:h2mux protocol:h2mux]
+2023-07-19T16:42:54Z INF Autoupdate frequency is set autoupdateFreq=86400000
+2023-07-19T16:42:54Z INF Generated Connector ID: 18c4dbf4-4018-4a71-b55a-a14513a82aaf
+2023-07-19T16:42:54Z WRN h2mux is no longer a supported protocol: upgrading edge connection to http2. Please remove '--protocol h2mux' from runtime arguments to remove this warning.
+2023-07-19T16:42:54Z INF Initial protocol http2
+2023-07-19T16:42:54Z INF ICMP proxy will use 172.24.153.143 as source for IPv4
+2023-07-19T16:42:54Z INF ICMP proxy will use fe80::215:5dff:fe8b:cc17 in zone eth0 as source for IPv6
+2023-07-19T16:42:54Z INF Starting metrics server on 127.0.0.1:38703/metrics
+2023-07-19T16:42:57Z INF Registered tunnel connection connIndex=0 connection=45026212-af54-4adb-b118-76acb3dc0b06 event=0 ip=198.41.192.47 location=LAX protocol=http2
+2023-07-19T16:42:58Z INF Registered tunnel connection connIndex=1 connection=33f4988e-fa82-4cdf-9c7b-7f7b66a3854b event=0 ip=198.41.200.33 location=SJC protocol=http2
+2023-07-19T16:42:59Z INF Registered tunnel connection connIndex=2 connection=61fd363d-0eba-4f0a-912c-691d1349ebce event=0 ip=198.41.192.57 location=LAX protocol=http2
+2023-07-19T16:43:00Z INF Registered tunnel connection connIndex=3 connection=afa9f133-1777-4ce0-94cc-8392a007f02b event=0 ip=198.41.200.193 location=SJC protocol=http2
+2023-07-19T16:43:03Z INF Initiating graceful shutdown due to signal interrupt ...
+2023-07-19T16:43:04Z INF Unregistered tunnel connection connIndex=3 event=0 ip=198.41.200.193
+2023-07-19T16:43:04Z INF Unregistered tunnel connection connIndex=1 event=0 ip=198.41.200.33
+2023-07-19T16:43:04Z INF Unregistered tunnel connection connIndex=2 event=0 ip=198.41.192.57
+2023-07-19T16:43:04Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.33
+2023-07-19T16:43:04Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.200.193
+2023-07-19T16:43:04Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.192.57
+2023-07-19T16:43:04Z INF Unregistered tunnel connection connIndex=0 event=0 ip=198.41.192.47
+2023-07-19T16:43:05Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.47
+2023-07-19T16:43:05Z ERR no more connections active and exiting
+2023-07-19T16:43:05Z INF Tunnel server stopped
+2023-07-19T16:43:05Z ERR icmp router terminated error="context canceled"
+2023-07-19T16:43:05Z INF Metrics server stopped

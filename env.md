@@ -10,5 +10,14 @@ pip install -r requirements.txt --extra-index-url https://download.pytorch.org/w
 
 conda create -n zse-sbir python=3.6
 
-
+python -u train.py --data_path ./datasets \ 
+                   --dataset sketchy_extend \ 
+                   --test_class test_class_sketchy25 \ 
+                   --batch 15 \ 
+                   --epoch 30 \ 
+                   -s ./checkpoints/sketchy_ext \
+                   -c 0 \ 
+                   -r rn \
+                   -shrink_sk 200 \
+                   -shrink_im 100
 

@@ -29,6 +29,7 @@ class Option:
         parser.add_argument('--datasetLen', type=int, default=10000)
         parser.add_argument('--learning_rate', type=float, default=1e-5)
         parser.add_argument('--weight_decay', type=float, default=1e-2)
+        parser.add_argument('--pretrain_load', type=str, default=None)
 
         # test
         parser.add_argument('--load', '-l', type=str, default=None)
@@ -37,8 +38,8 @@ class Option:
         parser.add_argument('--test_sk', type=int, default=20)
         parser.add_argument('--test_im', type=int, default=20)
         parser.add_argument('--num_workers', type=int, default=4)
-        parser.add_argument('--shrink_sk', type=int, default=20)
-        parser.add_argument('--shrink_im', type=int, default=10)
+        parser.add_argument('--valid_shrink_sk', type=int, default=20)
+        parser.add_argument('--valid_shrink_im', type=int, default=10)
         
 
         # other
@@ -48,5 +49,6 @@ class Option:
         self.parser = parser
 
 
-    def parse(self):
-        return self.parser.parse_args(args=[]) #MUST use args=[] compatible .ipynb
+    def parse(self):\
+        # return self.parser.parse_args() common
+        return self.parser.parse_args([]) #MUST use args=[] compatible .ipynb
