@@ -37,14 +37,14 @@ class TrainSet(data.Dataset):
 
 
     def __getitem__(self, index):
-        # choose 3 label
+        #? choose 3 label, 2 used
         self.choose_label_name = np.random.choice(self.train_class_label, 3, replace=False)
 
         sk_label = self.class_dict.get(self.choose_label_name[0])
         im_label = self.class_dict.get(self.choose_label_name[0])
         sk_label_neg = self.class_dict.get(self.choose_label_name[0])
         im_label_neg = self.class_dict.get(self.choose_label_name[-1])
-
+        #? imgage matches sketch-clear
         sketch = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
                                self.pre_load.all_train_sketch_cls_name, 1, self.pre_load.all_train_sketch)
         image = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[0],
@@ -81,8 +81,9 @@ class ValidSet(data.Dataset):
 
 
     def __getitem__(self, index):
+        #index: class_name
         label = self.cls[index]  # label 为数字
-        file_name = self.file_names[index]
+        file_name = self.file_names[index] #? file_name.shape?
         if self.path:
             image = file_name
         else:

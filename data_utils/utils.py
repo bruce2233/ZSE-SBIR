@@ -4,9 +4,9 @@ import numpy as np
 from PIL import Image
 from torchvision.transforms import transforms
 import cv2
+from typing import List,Tuple
 
-
-def get_all_train_file(args, skim):
+def get_all_train_file(args, skim) -> Tuple[List[str],List[str],List[str]] :
     if skim != 'sketch' or skim != 'image':
         NameError(skim + ' not implemented!')
 
@@ -61,7 +61,7 @@ def get_all_train_file(args, skim):
 
     return file_ls, labels, cname
 
-
+#? deprecated
 def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
     file_list = []
     for i in class_list:
@@ -78,20 +78,28 @@ def get_some_file_iccv(labels, rootpath, class_list, cname, number, file_ls):
 
 
 def get_file_iccv(labels, rootpath, class_name, cname, number, file_ls):
-    # 该类的label
+    # 查询该类的label
+    # 返回值为(N,a.ndim), 第一个0为匹配到的第0个元素, 第二个0表示位置为该元素在input data中的坐标.
     label = np.argwhere(cname == class_name)[0, 0]
     # 该类的所有样本
-    ind = np.argwhere(labels == label)
-    ind_rand = np.random.randint(1, len(ind), number)
-    ind_ori = ind[ind_rand]
+    ind = np.argwhere(labels == label) #shape = (N,1), 第一维表示该label的图片数量, 第二维表示图片的位置索引
+    # number个数据
+    ind_rand = np.random.randint(1, len(ind), number) # shape = (number)
+    ind_ori = ind[ind_rand] # shape = (number,1)
+    #ind_ori = ind[ind_rand].reshape(number)
+    #? file_ls.shape = (x), ind_ori.shape = (number,1), fancy indexing 规则
     files = file_ls[ind_ori][0][0]
     full_path = os.path.join(rootpath, files)
     return full_path
 
-
-def get_file_list_iccv(args, rootpath, skim, split):
-
+#? iccv
+def get_file_list_iccv(args, rootpath, skim, split,shrink_sk, shrink_im):
+    '''
+    shrink_sk: 20 default, 762 sketches
+    shrink_im: 10 default, 1771 images
+    '''
     if args.dataset == 'sketchy_extend':
+        #difference between test_class_sketchy25 and test_class_sketchy21
         if args.test_class == "test_class_sketchy25":
             shot_dir = "zeroshot1"
         elif args.test_class == "test_class_sketchy21":
@@ -101,9 +109,10 @@ def get_file_list_iccv(args, rootpath, skim, split):
 
         if skim == 'sketch':
             file_ls_file = args.data_path + f'/Sketchy/{shot_dir}/sketch_tx_000000000000_ready_filelist_zero.txt'
+            #256x256/sketch/tx_000000000000_ready/mushroom/n12998815_6750-2.png 86......
         elif skim == 'images':
             file_ls_file = args.data_path + f'/Sketchy/{shot_dir}/all_photo_filelist_zero.txt'
-
+            #256x256/photo/tx_000000000000_ready/cup/n03063073_5868.jpg 0 ......
     elif args.dataset == 'tu_berlin':
         if skim == 'sketch':
             file_ls_file = args.data_path + '/TUBerlin/zeroshot/png_ready_filelist_zero.txt'
@@ -122,7 +131,9 @@ def get_file_list_iccv(args, rootpath, skim, split):
     with open(file_ls_file, 'r') as fh:
         file_content = fh.readlines()
     file_ls = np.array([' '.join(ff.strip().split()[:-1]) for ff in file_content])
+            #256x256/photo/tx_000000000000_ready/cup/n03063073_5868.jpg ......
     labels = np.array([int(ff.strip().split()[-1]) for ff in file_content])
+    #0 ..... (the class id matched sketchy)
     file_names = np.array([(rootpath + x) for x in file_ls])
 
     # 对验证的样本数量进行缩减
@@ -131,7 +142,8 @@ def get_file_list_iccv(args, rootpath, skim, split):
         if args.testall:
             index = [i for i in range(0, file_names.shape[0], 1)]  # 15229
         else:
-            index = [i for i in range(0, file_names.shape[0], 20)]   # 762
+            # index = [i for i in range(0, file_names.shape[0], 20)]   # 762 #debug
+            index = [i for i in range(0, file_names.shape[0], shrink_sk)]   # 762 when 20 default #new index i-> old index i*200 valid dataset
         file_names = file_names[index[:]]
         labels = labels[index[:]]
 
@@ -139,7 +151,8 @@ def get_file_list_iccv(args, rootpath, skim, split):
         if args.testall:
             index = [i for i in range(0, file_names.shape[0], 1)]  # 17101
         else:
-            index = [i for i in range(0, file_names.shape[0], 10)]  # 1711
+            # index = [i for i in range(0, file_names.shape[0], 10)]  # 1711 #debug
+            index = [i for i in range(0, file_names.shape[0], shrink_im)]  # 171
         file_names = file_names[index[:]]
         labels = labels[index[:]]
 
@@ -190,15 +203,16 @@ def preprocess(image_path, img_type="im"):
     imstd = [0.5, 0.5, 0.5]
 
     transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(immean, imstd)
+        transforms.ToTensor(), #[0,1]
+        transforms.Normalize(immean, imstd) # [-1,1]
     ])
 
     if img_type == 'im':
-        return transform(Image.open(image_path).resize((224, 224)).convert('RGB'))
+        return transform(Image.open(image_path).resize((224, 224)).convert('RGB')) # RGB default
     else:
         # 对sketch 进行crop，等比例扩大到224
-        img = cv2.imread(image_path)
+        #? 数据增强
+        img = cv2.imread(image_path) #BGR default
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = remove_white_space_image(img, 10)
         img = resize_image_by_ratio(img, 224)
@@ -222,8 +236,10 @@ def remove_white_space_image(img_np: np.ndarray, padding: int):
     #     img_np = img_np.astype("uint8")
 
     h, w, c = img_np.shape
-    img_np_single = np.sum(img_np, axis=2)
+    img_np_single = np.sum(img_np, axis=2) # RGB channel sum
     Y, X = np.where(img_np_single <= 300)  # max = 300
+    #? `where` implenmtation
+    #? is 300 enough?
     ymin, ymax, xmin, xmax = np.min(Y), np.max(Y), np.min(X), np.max(X)
     img_cropped = img_np[max(0, ymin - padding):min(h, ymax + padding), max(0, xmin - padding):min(w, xmax + padding),
                   :]
@@ -261,8 +277,10 @@ def make_img_square(img_np: np.ndarray):
             delta1 = (h - w) // 2
             delta2 = (h - w) - delta1
 
-            white1 = np.ones((h, delta1)) * np.max(img_np)
-            white2 = np.ones((h, delta2)) * np.max(img_np)
+            white1 = np.ones((h, delta1)) * np.max(img_np) #left padding
+            #? why np.max instead of 255
+            #clear: 255 or 1.0
+            white2 = np.ones((h, delta2)) * np.max(img_np) #right padding
 
             new_img = np.hstack([white1, img_np, white2])
             return new_img
@@ -282,6 +300,7 @@ def make_img_square(img_np: np.ndarray):
             delta2 = (h - w) - delta1
 
             white1 = np.ones((h, delta1, c), dtype=img_np.dtype) * np.max(img_np)
+            #? why dtype is explicit
             white2 = np.ones((h, delta2, c), dtype=img_np.dtype) * np.max(img_np)
 
             new_img = np.hstack([white1, img_np, white2])

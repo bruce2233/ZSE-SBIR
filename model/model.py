@@ -3,7 +3,6 @@ import torch.nn as nn
 from .sa import Self_Attention
 from .ca import Cross_Attention
 from .rn import Relation_Network, cos_similar
-
 from options import Option
 
 class Model(nn.Module):
@@ -12,12 +11,12 @@ class Model(nn.Module):
 
         self.args = args
 
-        self.sa = Self_Attention(d_model=args.d_model, cls_number=args.cls_number, pretrained=args.pretrained)
+        self.sa = Self_Attention(d_model=args.d_model, cls_number=args.cls_number, pretrained=args.pretrained) 
         self.ca = Cross_Attention(args=args, h=args.head, n=args.number, d_model=args.d_model, d_ff=args.d_ff, dropout=0.1)
         self.rn = Relation_Network(args.anchor_number, dropout=0.1)
-        self.conv2d = nn.Conv2d(768, 512, 2, 2)
-
-
+        self.conv2d_VQGAN = nn.Conv2d(256, 512, 6, 4)
+        self.output4VQGAN = nn.ConvTranspose2d(768, 256, 19)
+        
     def forward(self, sk, im, stage='train', only_sa=False):
 
         if stage == 'train':
@@ -31,7 +30,13 @@ class Model(nn.Module):
             batch = token_fea.size(0)
 
             token_fea = token_fea.view(batch, 768, 14, 14)
-            down_fea = self.conv2d(token_fea)
+            
+            up_fea = self.output4VQGAN(token_fea)
+            # print(up_fea.shape)
+            
+            down_fea = self.conv2d_VQGAN(up_fea) 
+            # print(down_fea.shape)
+            
             down_fea = down_fea.view(batch, 512, 7*7)
             down_fea = down_fea.transpose(1, 2)  # [4b, 49, 512]
 
@@ -46,20 +51,22 @@ class Model(nn.Module):
             return cls_fea, rn_scores
 
         else:
-
             if only_sa:
                 sa_fea, left_tokens, idxs = self.sa(sk)  # [b, 197, 768]
                 return sa_fea, idxs
             else:
                 sk_im = torch.cat((sk, im), dim=0)
                 ca_fea = self.ca(sk_im)  # [2b, 197, 768]
-
                 cls_fea = ca_fea[:, 0]  # [2b, 1, 768]
                 token_fea = ca_fea[:, 1:]  # [2b, 196, 768]
                 batch = token_fea.size(0)
 
                 token_fea = token_fea.view(batch, 768, 14, 14)
-                down_fea = self.conv2d(token_fea)
+                
+                up_fea = self.output4VQGAN(token_fea)
+                # print(up_fea.shape)
+                down_fea = self.conv2d_VQGAN(up_fea) 
+            
                 down_fea = down_fea.view(batch, 512, 7 * 7)
                 down_fea = down_fea.transpose(1, 2)  # [2b, 49, 512]
 
@@ -70,8 +77,9 @@ class Model(nn.Module):
                 rn_scores = self.rn(cos_scores)  # [b, 49, 49]
 
                 # print('cls_fea:', cls_fea.size())
-                # print('rn_scores:', cls_fea.size())
+                # print('rn_scores:', rn_scores.size())
                 return cls_fea, rn_scores
+
 
 if __name__ == '__main__':
     args = Option().parse()
