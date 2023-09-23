@@ -13,7 +13,7 @@ class MultiHeadDotProductAttention(nn.Module):
         self.heads = heads
         self.scale = (dim / heads) ** -0.5
 
-        self.to_qkv = nn.Linear(dim, dim * 3)
+        self.to_qkv = nn.Linear(dim, dim * 3)  //W_q,W_k,W_v
 
         self.to_out = nn.Sequential(
             nn.Linear(dim, dim),
