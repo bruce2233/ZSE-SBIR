@@ -94,3 +94,73 @@ class ValidSet(data.Dataset):
 
     def __len__(self):
         return len(self.file_names)
+
+# %% 
+import sys
+sys.path.append("../")
+print(sys.path)
+
+file_path = "../datasets/Sketchy/zeroshot1/all_photo_filelist_train.txt"
+
+def listFromTxt(filepath):
+    with open(file_path) as file:
+        lines = file.readlines()
+
+    formatted_list = [line.strip().split(" ")[0] for line in lines]
+    return formatted_list
+
+formatted_list = listFromTxt(file_path)
+
+# %%
+from taming.data.scribble import ScribblePreprocessor
+from PIL import Image
+from tqdm import tqdm
+from multiprocessing import Pool
+
+# %%
+def worker(worker_id):
+    print(worker_id)
+    tasks = partial[worker_id::10]
+    print(len(tasks))
+    for filename in tasks:
+        print(filename)
+        print(processor)
+        img = Image.open(os.path.join(datasets_base,filename))
+        print(img.shape)
+        res = processor.image_scribble()
+        print("res")
+        fullPath = os.path.join(datasets_base,"scribble",filename)
+        print(fullPath)
+        saveImg(res, fullPath)
+
+# %%
+datasets_base = "/root/app/ZSE-SBIR/datasets/Sketchy"
+processor = ScribblePreprocessor()
+
+partial = formatted_list[::100]
+def saveImg(res, fullPath):
+    directory = os.path.dirname(fullPath)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    res.save(fullPath)
+    print(fullPath+"has been processed")
+    
+worker_num =10
+p=Pool(10)
+
+# %%
+for i in range(worker_num):
+    p.apply_async(worker, args=(i,), error_callback=lambda err :print(err))
+    # p.apply(worker, args=(i,))
+p.close()
+p.join()
+    
+    
+# %%
+res = processor.image_scribble(Image.open(os.path.join(datasets_base,partial[0])))
+print("res")
+fullPath = os.path.join(datasets_base,"scribble",partial[0])
+print(fullPath)
+saveImg(res, fullPath)
+
+# %%
