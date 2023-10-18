@@ -1,0 +1,3 @@
+[submodule "taming-transformers"]
+	path = taming-transformers
+	url = git@github.com:bruce2233/taming-transformers.git
