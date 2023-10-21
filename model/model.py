@@ -81,6 +81,22 @@ class Model(nn.Module):
                 # print('rn_scores:', rn_scores.size())
                 return cls_fea, rn_scores
 
+    def encode(self, sk, im, only_sa=False):
+        '''
+            sk, im: (b,n,c)
+        '''
+        if only_sa:
+                sa_fea, left_tokens, idxs = self.sa(sk)  # [b, 197, 768]
+                return sa_fea, idxs
+        else:
+            sk_im = torch.cat((sk, im), dim=0)
+            ca_fea = self.ca(sk_im)  # [2b, 197, 768]
+            cls_fea = ca_fea[:, 0]  # [2b, 1, 768]
+            token_fea = ca_fea[:, 1:]  # [2b, 196, 768]
+            batch = token_fea.size(0)
+
+            token_fea = token_fea.view(batch, 768, 14, 14)
+        return token_fea[:batch], token_fea[batch:]
 
 if __name__ == '__main__':
     args = Option().parse()

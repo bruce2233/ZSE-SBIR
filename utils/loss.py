@@ -4,7 +4,6 @@ import torch.nn as nn
 
 def triplet_loss(x, args):
     """
-
     :param x: 4*batch -> sk_p, sk_n, im_p, im_n
     :param args:
     :return:
@@ -21,7 +20,7 @@ def triplet_loss(x, args):
 def rn_loss(predict, target):
     mse_loss = nn.MSELoss().cuda()
     loss = mse_loss(predict, target) #ipredict.shape=target.shape=(2b,1)
-
+    
     return loss
 
 
