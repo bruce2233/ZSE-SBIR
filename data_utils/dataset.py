@@ -95,3 +95,29 @@ class ValidSet(data.Dataset):
 
     def __len__(self):
         return len(self.file_names)
+
+class ScribbleTrainSet(data.Dataset):
+    def __init__(self,args) -> None:
+        super().__init__()
+        self.args = args
+        
+        if args.dataset=="sketchy_extend":
+            with open(os.path.join(args.data_path, "Sketchy","zeroshot0","all_photo_filelist_train.txt")) as f:
+                file_list = [line.split(" ")[0] for line in f.readlines()]
+                self.file_list= file_list
+    
+    def __getitem__(self, index) :
+        def sk_im_path(path, img_type):
+            if img_type=="sk":
+                return os.path.join(self.args.data_path, "Sketchy",path)
+            elif img_type=="im":
+                return os.path.join(self.args.data_path, "Sketchy","scribble",path)
+            else:
+                raise NotImplementedError('img_type dataset path not ')
+                
+        sk = preprocess(sk_im_path(self.file_list[index], img_type='sk'), img_type="sk")
+        im = preprocess(sk_im_path(self.file_list[index],img_type='im'))
+        return sk, im
+        
+    def __len__(self):
+        return self.args.datasetLen
