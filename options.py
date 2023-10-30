@@ -1,5 +1,5 @@
 import argparse
-
+from  utils.config_utils import str2bool
 
 class Option:
 
@@ -37,16 +37,36 @@ class Option:
         parser.add_argument('--test_sk', type=int, default=20)
         parser.add_argument('--test_im', type=int, default=20)
         parser.add_argument('--num_workers', type=int, default=4)
-        parser.add_argument('--shrink_sk', type=int, default=20)
-        parser.add_argument('--shrink_im', type=int, default=10)
+        parser.add_argument('--valid_shrink_sk', type=int, default=20)
+        parser.add_argument('--valid_shrink_im', type=int, default=10)
         
-
+        # taming-transformer
+        parser.add_argument(
+        "-b",
+        "--base",
+        nargs="*",
+        metavar="base_config.yaml",                             
+        help="paths to base configs. Loaded from left-to-right. "
+        "Parameters can be overwritten or added with command-line options of the form `--key value`.",
+        default=list(),
+        ),
+        
+        parser.add_argument(
+        "-t",
+        "--train",
+        type=str2bool,
+        const=True,
+        default=False,
+        nargs="?",
+        help="train",
+        )
         # other
         parser.add_argument('--choose_cuda', '-c', type=str, default='0')
         parser.add_argument("--seed", type=int, default=2021, help="random seed.")
 
         self.parser = parser
 
-
     def parse(self):
-        return self.parser.parse_args(args=[]) #MUST use args=[] compatible .ipynb
+        # return self.parser.parse_args(args=[]) #MUST use args=[] compatible .ipynb
+        return self.parser.parse_args()
+    
