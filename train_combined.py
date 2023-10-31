@@ -18,14 +18,11 @@ import sys
 sys.path.append("./taming_transformers")
 from taming_transformers.main import  instantiate_from_config
 from data_utils import patch_replaced
-from  data_utils.dataset import ScribbleTrainSet
+from  data_utils.dataset import ScribbleExtendTrainSet, ScribbleTrainSet
 
 def train():
     # train_data, sk_valid_data, im_valid_data = load_data(args,dataset_type="scribble")
-    train_data = ScribbleTrainSet(args)
-    # still devloping
-    sk_valid_data = ScribbleTrainSet(args)
-    im_valid_data = ScribbleTrainSet(args)
+    train_data, sk_valid_data, im_valid_data = load_data(args,True)
     
     TAMING_ROOT_PATH = "taming_transformers/"
     VQGAN_CKPT_PATH = TAMING_ROOT_PATH + "logs/idea3/configs/2020-11-20T12-54-32-project.yaml"
@@ -77,8 +74,17 @@ def train():
             lossrn = rn_loss(rn_scores, target_rn) * 4 #loss weitght = 4, rn loss
             loss = losstri + lossrn
 
-            #
+            # vqgan replace generation
             sk_fea, im_fea = model.encode(sk, im)
+            #batch = batch_size instead of previous 4*batch_size
+            batch = sk_fea.size(0)//2
+            patch_size = sk_fea.size(-1)
+            c = sk_fea.size(1)
+            
+            #(2b, patch_size^2, channels)
+            sk_fea = sk_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
+            im_fea = im_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
+            
             patch_replaced.fea_sorted_similarity(sk_fea, im_fea, model.rn)
             
             # backward

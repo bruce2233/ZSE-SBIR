@@ -4,7 +4,6 @@ from torch.utils import data
 from .preLoad import load_para, PreLoad
 from .utils import preprocess, get_file_iccv, create_dict_texts
 
-
 def load_data_test(args):
     pre_load = PreLoad(args)
     sk_valid_data = ValidSet(pre_load, 'sk', half=True)
@@ -12,10 +11,12 @@ def load_data_test(args):
     return sk_valid_data, im_valid_data
 
 
-def load_data(args):
+def load_data(args,scribble=False):
     train_class_label, test_class_label = load_para(args)  # cls : 类名
     pre_load = PreLoad(args)
     train_data = TrainSet(args, train_class_label, pre_load)
+    if scribble:
+        train_data = ScribbleExtendTrainSet(args, train_class_label, pre_load)
     sk_valid_data = ValidSet(pre_load, 'sk')
     im_valid_data = ValidSet(pre_load, 'im')
     return train_data, sk_valid_data, im_valid_data
@@ -45,13 +46,13 @@ class TrainSet(data.Dataset):
         sk_label_neg = self.class_dict.get(self.choose_label_name[0])
         im_label_neg = self.class_dict.get(self.choose_label_name[-1])
         #? imgage matches sketch-clear
-        sketch = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
+        _,sketch = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
                                self.pre_load.all_train_sketch_cls_name, 1, self.pre_load.all_train_sketch)
-        image = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[0],
+        _,image = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[0],
                               self.pre_load.all_train_image_cls_name, 1, self.pre_load.all_train_image)
-        sketch_neg = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
+        _, sketch_neg = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
                                    self.pre_load.all_train_sketch_cls_name, 1, self.pre_load.all_train_sketch)
-        image_neg = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[-1],
+        _, image_neg = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[-1],
                                   self.pre_load.all_train_image_cls_name, 1, self.pre_load.all_train_image)
 
         sketch = preprocess(sketch, 'sk')
@@ -121,3 +122,37 @@ class ScribbleTrainSet(data.Dataset):
         
     def __len__(self):
         return self.args.datasetLen
+    
+class ScribbleExtendTrainSet(TrainSet):
+    # override
+    def __getitem__(self, index):
+        def scribble_path(path):
+            return os.path.join(self.args.data_path, "Sketchy","scribble", path)
+
+        self.choose_label_name = np.random.choice(self.train_class_label, 3, replace=False)
+        
+        sk_label = self.class_dict.get(self.choose_label_name[0])
+        im_label = self.class_dict.get(self.choose_label_name[0])
+        sk_label_neg = self.class_dict.get(self.choose_label_name[0])
+        im_label_neg = self.class_dict.get(self.choose_label_name[-1])
+        #? imgage matches sketch-clear
+        _, sketch = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
+                                self.pre_load.all_train_sketch_cls_name, 1, self.pre_load.all_train_sketch)
+        image_paths, image = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[0],
+                                self.pre_load.all_train_image_cls_name, 1, self.pre_load.all_train_image)
+        _, sketch_neg = get_file_iccv(self.pre_load.all_train_sketch_label, self.root_dir, self.choose_label_name[0],
+                                    self.pre_load.all_train_sketch_cls_name, 1, self.pre_load.all_train_sketch)
+        _, image_neg = get_file_iccv(self.pre_load.all_train_image_label, self.root_dir, self.choose_label_name[-1],
+                                    self.pre_load.all_train_image_cls_name, 1, self.pre_load.all_train_image)
+
+        # 将sketch正例替换为scribble
+        scribble = scribble_path(image_paths)
+        sketch = scribble
+        
+        sketch = preprocess(sketch, 'sk')
+        image = preprocess(image)
+        sketch_neg = preprocess(sketch_neg, 'sk')
+        image_neg = preprocess(image_neg)
+
+        return sketch, image, sketch_neg, image_neg, \
+                sk_label, im_label, sk_label_neg, im_label_neg

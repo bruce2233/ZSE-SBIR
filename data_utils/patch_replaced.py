@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import einops 
 import torchvision
+from model.rn import cos_similar
 
 def patch2im(patch_index,im, patch_size=16):
     '''
@@ -42,14 +43,15 @@ def fea_process(sk_fea, im_fea, upsample=None):
         return upsample(sk_fea, im_fea)
     return sk_fea, im_fea
 
-def patch_similarity(sk_fea, im_fea, rn):
+def patch_similarity(sk_fea, im_fea):
     # token_fea = einops.rearrange(token_fea,"b d h w -> b d (h w)") #token_fea = token_fea.view(batch, 768, 14, 14)
     # sk_fea, im_fea = fea_process(token_fea[sk.size(0)-1], token_fea[sk.size(0):])
     sk_fea, im_fea = fea_process(sk_fea, im_fea)
     print(sk_fea.shape, im_fea.shape)
-    cos_scores = rn.cos_similar(sk_fea, im_fea)
+    cos_scores = cos_similar(sk_fea, im_fea)
     print(cos_scores.shape)
-    np.savetxt("./logs/cos_scores",cos_scores.cpu()[0])
+    # np.savetxt("./logs/cos_scores",cos_scores.cpu()[0])
+
     return cos_scores
 
 def sort_patch_similarity(cos_scores):
@@ -77,7 +79,7 @@ def sort_patch_similarity(cos_scores):
     return max_indices
 
 def fea_sorted_similarity(sk_fea, im_fea, rn):
-    cos_scores = patch_similarity(sk_fea, im_fea, rn)
+    cos_scores = patch_similarity(sk_fea, im_fea)
     max_indices = sort_patch_similarity(cos_scores)
     return max_indices
 
