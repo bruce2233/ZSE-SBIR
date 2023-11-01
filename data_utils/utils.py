@@ -90,7 +90,7 @@ def get_file_iccv(labels, rootpath, class_name, cname, number, file_ls):
     #? file_ls.shape = (x), ind_ori.shape = (number,1), fancy indexing 规则
     files = file_ls[ind_ori][0][0]
     full_path = os.path.join(rootpath, files)
-    return full_path
+    return files, full_path
 
 #? iccv
 def get_file_list_iccv(args, rootpath, skim, split,shrink_sk, shrink_im):

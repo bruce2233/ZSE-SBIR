@@ -81,12 +81,12 @@ def train():
             patch_size = sk_fea.size(-1)
             c = sk_fea.size(1)
             
-            #(2b, patch_size^2, channels)
+            #(2b, patch_size^2, channels, )
             sk_fea = sk_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
             im_fea = im_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
             
-            patch_replaced.fea_sorted_similarity(sk_fea, im_fea, model.rn)
-            
+            max_indices = patch_replaced.fea_sorted_similarity(sk_fea, im_fea)
+            im_replaced = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
             # backward
             loss.backward()
             optimizer.step()

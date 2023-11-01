@@ -65,7 +65,6 @@ class Model(nn.Module):
                 token_fea = token_fea.view(batch, 768, 14, 14)
                 
                 up_fea = self.output4VQGAN(token_fea)
-                # print(up_fea.shape)
                 down_fea = self.conv2d_VQGAN(up_fea) 
             
                 down_fea = down_fea.view(batch, 512, 7 * 7)
@@ -90,13 +89,14 @@ class Model(nn.Module):
                 return sa_fea, idxs
         else:
             sk_im = torch.cat((sk, im), dim=0)
-            ca_fea = self.ca(sk_im)  # [2b, 197, 768]
+            sa_fea, left_tokens, idxs = self.sa(sk_im)  # [4b, 197, 768]
+            ca_fea = self.ca(sa_fea)  # [4b, 197, 768]
             cls_fea = ca_fea[:, 0]  # [2b, 1, 768]
             token_fea = ca_fea[:, 1:]  # [2b, 196, 768]
             batch = token_fea.size(0)
 
             token_fea = token_fea.view(batch, 768, 14, 14)
-        return token_fea[:batch], token_fea[batch:]
+        return token_fea[:batch//2], token_fea[batch//2:]
 
 if __name__ == '__main__':
     args = Option().parse()
