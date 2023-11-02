@@ -21,12 +21,12 @@ def patch2im(patch_index,im, patch_size=16):
 def patch_match_1to1(im, indices, patch_size=16):
     '''
         im: (c,w,h)
-        indices: (patch_size^2, 1), [1]=(patch_index)
+        indices: (patch_size^2), [0]=(patch_index)
         1 to 1
     '''
     x = []
     for i in indices:
-        patch_index = np.unravel_index(i,(im.size(-1)//patch_size, im.size(-1)//patch_size))
+        patch_index = np.unravel_index(i.cpu(),(im.size(-1)//patch_size, im.size(-1)//patch_size))
         item = patch2im(patch_index, im, patch_size).unsqueeze(0)
         x.append(item)
     x= torch.cat(x,dim=0)
@@ -68,17 +68,25 @@ def patch_similarity(sk_fea, im_fea):
 
     return cos_scores
 
-def sort_patch_similarity(cos_scores):
+def sort_patch_similarity_1_to_1(cos_scores):
+    '''
+        cos_scores: (sk_patch_size^2, im_patch_size^2)
+    '''
+    max_indices = torch.argmax(cos_scores,dim=1)
+    return max_indices
+
+def sort_patch_similarity(cos_scores, to1=False):
+    if to1:
+        return sort_patch_similarity_1_to_1(cos_scores)
     # print(cos_scores.argsort(0).shape,cos_scores.argsort(0))
     # print(torch.argmax(einops.rearrange(cos_scores,"a b c -> b (a c)")))
     b = einops.rearrange(cos_scores,"a b c -> b (a c)")
     # a_th sketch's patches' similarity to c_th image's patch.
-    
     # print(cos_scores.shape,cos_scores)
 
     max_indices = torch.empty((0,2), dtype=int)
-    print(b)
-    print(max_indices)
+    # print(b)
+    # print(max_indices)
 
     for i in b:
         max_indices_item = torch.argmax(i)
@@ -92,9 +100,10 @@ def sort_patch_similarity(cos_scores):
         np.savetxt("./logs/max_indices",max_indices)
     return max_indices
 
-def fea_sorted_similarity(sk_fea, im_fea):
+def fea_sorted_similarity(sk_fea, im_fea,to1=False):
     cos_scores = patch_similarity(sk_fea, im_fea)
-    max_indices = sort_patch_similarity(cos_scores)
+    # max_indices could be (b, patch_index) when 1 to 1 or (b, im_batch_index, patch_index) when 1 to N
+    max_indices = sort_patch_similarity(cos_scores, to1)
     return max_indices
 
 def generate_patch_replaced_im(max_indices, im):

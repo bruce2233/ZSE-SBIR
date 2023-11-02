@@ -55,6 +55,7 @@ class Model(nn.Module):
             if only_sa:
                 sa_fea, left_tokens, idxs = self.sa(sk)  # [b, 197, 768]
                 return sa_fea, idxs
+            #only
             else:
                 sk_im = torch.cat((sk, im), dim=0)
                 ca_fea = self.ca(sk_im)  # [2b, 197, 768]
@@ -80,13 +81,19 @@ class Model(nn.Module):
                 # print('rn_scores:', rn_scores.size())
                 return cls_fea, rn_scores
 
+    def encode_only_sa(self,sk_or_im):
+        sa_fea, left_tokens, idxs = self.sa(sk_or_im)  # [b, 197, 768]
+        return sa_fea, idxs
+    
     def encode(self, sk, im, only_sa=False):
         '''
             sk, im: (b,n,c)
         '''
         if only_sa:
-                sa_fea, left_tokens, idxs = self.sa(sk)  # [b, 197, 768]
-                return sa_fea, idxs
+            (sk_sa,_) = self.encode_only_sa(sk)
+            (im_sa,_) = self.encode_only_sa(im)
+            res = torch.cat([sk_sa,im_sa])
+            return res
         else:
             sk_im = torch.cat((sk, im), dim=0)
             sa_fea, left_tokens, idxs = self.sa(sk_im)  # [4b, 197, 768]

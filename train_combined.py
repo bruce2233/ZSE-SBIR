@@ -19,18 +19,28 @@ sys.path.append("./taming_transformers")
 from taming_transformers.main import  instantiate_from_config
 from data_utils import patch_replaced
 from  data_utils.dataset import ScribbleExtendTrainSet, ScribbleTrainSet
+import torchvision
+from utils.util import load_checkpoint
 
 def train():
     # train_data, sk_valid_data, im_valid_data = load_data(args,dataset_type="scribble")
-    train_data, sk_valid_data, im_valid_data = load_data(args,True)
+    train_data, sk_valid_data, im_valid_data = load_data(args,scribble=True)
     
     TAMING_ROOT_PATH = "taming_transformers/"
     VQGAN_CKPT_PATH = TAMING_ROOT_PATH + "logs/idea3/configs/2020-11-20T12-54-32-project.yaml"
     vqgan = instantiate_from_config(OmegaConf.load(VQGAN_CKPT_PATH).model)
     vqgan.cuda()
-    print(vqgan)
+    # print(vqgan)
     model = Model(args)
     model = model.cuda()
+    
+    #load best_ckkpt
+    if args.load is not None:
+        checkpoint = load_checkpoint(args.load)
+        cur = model.state_dict()
+        new = {k: v for k, v in checkpoint['model'].items() if k in cur.keys()}
+        cur.update(new)
+        model.load_state_dict(cur)
 
     # batch=15, lr=1e-5 / batch=30, lr=2e-5
     optimizer = build_optimizer(args, model)
@@ -57,7 +67,7 @@ def train():
             sk = torch.cat((sk, sk_neg))
             im = torch.cat((im, im_neg))
             sk, im = sk.cuda(), im.cuda()
-
+            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk,im],dim=0)),"logs/sk_im.jpg")
             # prepare rn truth
             target_rn = torch.cat((torch.ones(sk_label.size()), torch.zeros(sk_label.size())), dim=0) #(2b)
             target_rn = torch.clamp(target_rn, 0.01, 0.99).unsqueeze(dim=1) #(2b,1)
@@ -85,8 +95,9 @@ def train():
             sk_fea = sk_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
             im_fea = im_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
             
-            max_indices = patch_replaced.fea_sorted_similarity(sk_fea, im_fea)
+            max_indices = patch_replaced.fea_sorted_similarity(sk_fea, im_fea,to1=True)
             im_replaced = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
+            torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced),"logs/sk_im_rep.jpg")
             # backward
             loss.backward()
             optimizer.step()
