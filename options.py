@@ -66,7 +66,8 @@ class Option:
 
         self.parser = parser
 
-    def parse(self):
-        # return self.parser.parse_args(args=[]) #MUST use args=[] compatible .ipynb
+    def parse(self, jupyter=False):
+        if jupyter == True:
+            return self.parser.parse_args(args=[]) #MUST use args=[] compatible .ipynb
         return self.parser.parse_args()
     
