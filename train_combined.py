@@ -67,7 +67,7 @@ def train():
             sk = torch.cat((sk, sk_neg))
             im = torch.cat((im, im_neg))
             sk, im = sk.cuda(), im.cuda()
-            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk,im],dim=0)),"logs/sk_im.jpg")
+            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk,im],dim=0)),f"logs/sk_im_{index}.jpg")
             # prepare rn truth
             target_rn = torch.cat((torch.ones(sk_label.size()), torch.zeros(sk_label.size())), dim=0) #(2b)
             target_rn = torch.clamp(target_rn, 0.01, 0.99).unsqueeze(dim=1) #(2b,1)
@@ -97,13 +97,13 @@ def train():
             
             max_indices = patch_replaced.fea_sorted_similarity(sk_fea, im_fea,to1=True)
             im_replaced = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
-            torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced),"logs/sk_im_rep.jpg")
+            torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced),f"logs/sk_im_rep_{index}.jpg")
             # backward
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
             #for debug
-            break
+            # break
             
             # log
             step = index + 1
@@ -116,7 +116,7 @@ def train():
                       f'tri:{losstri.item():.3f} rn:{lossrn.item():.3f}')
 
         # if epoch >= 10:
-        if epoch >= 1:
+        if epoch >= 5:
             print('------------------------valid------------------------')
             # log
             map_all, map_200, precision_100, precision_200 = valid_cls(
