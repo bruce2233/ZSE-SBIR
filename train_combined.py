@@ -86,14 +86,10 @@ def train():
 
             # vqgan replace generation
             sk_fea, im_fea = model.encode(sk, im)
-            #batch = batch_size instead of previous 4*batch_size
-            batch = sk_fea.size(0)//2
-            patch_size = sk_fea.size(-1)
-            c = sk_fea.size(1)
-            
             #(2b, patch_size^2, channels, )
-            sk_fea = sk_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
-            im_fea = im_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
+            sk_fea = transform_BCPP2BsquarePC(sk_fea)
+            im_fea = transform_BCPP2BsquarePC(im_fea)
+            print(sk_fea.shape)
             
             sk_1 = sk[:1]
             im_1 = im[:1]
@@ -101,8 +97,26 @@ def train():
             torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk_1,im_1,im_2])),f"logs/sk_im_mixed.jpg")
             sk_11_fea, im_1_fea=model.encode(sk_1,im_1)
             sk_12_fea, im_2_fea =model.encode(sk_1,im_2)
+            sk_11_fea = transform_BCPP2BsquarePC(sk_11_fea)
+            sk_12_fea = transform_BCPP2BsquarePC(sk_12_fea)
+            im_1_fea = transform_BCPP2BsquarePC(im_1_fea)
+            im_2_fea = transform_BCPP2BsquarePC(im_2_fea)
+            print(sk_11_fea.shape, sk_11_fea.shape, im_1_fea.shape, im_2_fea.shape)
+            
+            
             sk_cs=torch.nn.functional.cosine_similarity(sk_11_fea,sk_12_fea)
             im_cs=torch.nn.functional.cosine_similarity(im_1_fea,im_2_fea)
+            
+            max_indices_1 = patch_replaced.fea_sorted_similarity(sk_11_fea, im_1_fea,to1=True)
+            im_replaced_1 = patch_replaced.generate_patch_replaced_im_1to1(max_indices_1, im_1)
+            print(max_indices_1, im_replaced_1)
+            max_indices_2 = patch_replaced.fea_sorted_similarity(sk_12_fea, im_2_fea,to1=True)
+            im_replaced_2 = patch_replaced.generate_patch_replaced_im_1to1(max_indices_2, im_2)
+            print(max_indices_2, im_replaced_2)
+            
+            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat(im_replaced_1)),f"logs/sk_im_rep_mixed1.jpg")
+            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat(im_replaced_2)),f"logs/sk_im_rep_mixed2.jpg")
+            
             
             
             print(torch.nn.functional.cosine_similarity(im_fea[0],im_fea[1]))
@@ -143,7 +157,15 @@ def train():
                     {'model': model.state_dict(), 'epoch': epoch,
                      'map_all': accuracy, 'precision_100': precision},
                     args.save, f'best_checkpoint')
-
+def transform_BCPP2BsquarePC(fea):
+    '''
+        fea (batch, channel, patch_num, patch_num)
+    '''
+    #batch = batch_size instead of previous 4*batch_size
+    batch = fea.size(0)
+    patch_size = fea.size(-1)
+    c = fea.size(1)
+    return fea.view(batch, c, patch_size*patch_size).transpose(1,2)
 
 if __name__ == '__main__':
     args = Option().parse()
