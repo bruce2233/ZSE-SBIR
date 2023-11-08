@@ -46,7 +46,7 @@ def train():
     optimizer = build_optimizer(args, model)
 
     train_data_loader = DataLoader(
-        train_data, args.batch, num_workers=2, drop_last=True)  # batch=15
+        train_data, args.batch, num_workers=1, drop_last=True, shuffle=True)  # batch=15
 
     start_epoch = 0
     accuracy = 0
@@ -64,8 +64,8 @@ def train():
 
         for index, (sk, im, sk_neg, im_neg, sk_label, im_label, _, _) in enumerate(train_data_loader):
             # prepare data
-            sk = torch.cat((sk, sk_neg))
-            im = torch.cat((im, im_neg))
+            sk = torch.cat([sk, sk_neg])
+            im = torch.cat([im, im_neg])
             sk, im = sk.cuda(), im.cuda()
             torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk,im],dim=0)),f"logs/sk_im_{index}.jpg")
             # prepare rn truth
@@ -95,6 +95,17 @@ def train():
             sk_fea = sk_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
             im_fea = im_fea.view(2*batch, c, patch_size*patch_size).transpose(1,2)
             
+            sk_1 = sk[:1]
+            im_1 = im[:1]
+            im_2 = im[1:]
+            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk_1,im_1,im_2])),f"logs/sk_im_mixed.jpg")
+            sk_11_fea, im_1_fea=model.encode(sk_1,im_1)
+            sk_12_fea, im_2_fea =model.encode(sk_1,im_2)
+            sk_cs=torch.nn.functional.cosine_similarity(sk_11_fea,sk_12_fea)
+            im_cs=torch.nn.functional.cosine_similarity(im_1_fea,im_2_fea)
+            
+            
+            print(torch.nn.functional.cosine_similarity(im_fea[0],im_fea[1]))
             max_indices = patch_replaced.fea_sorted_similarity(sk_fea, im_fea,to1=True)
             im_replaced = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
             torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced),f"logs/sk_im_rep_{index}.jpg")
