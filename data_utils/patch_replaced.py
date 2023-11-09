@@ -72,7 +72,7 @@ def sort_patch_similarity_1_to_1(cos_scores):
     '''
         cos_scores: (sk_patch_size^2, im_patch_size^2)
     '''
-    max_indices = torch.argmax(cos_scores,dim=1)
+    max_indices = torch.argmax(cos_scores,dim=-1)
     return max_indices
 
 def sort_patch_similarity(cos_scores, to1=False):
