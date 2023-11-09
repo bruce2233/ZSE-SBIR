@@ -233,6 +233,9 @@ im_sa, im_idxs = model(im.cuda(), None, 'test', only_sa=True)#im_sa.shape=(20,19
 sk_im_sa = torch.cat((sk_sa, im_sa), dim=0)
 print(sk_im_sa.shape)
 ca_fea = model.ca(sk_im_sa)  # [2b, 197, 768]
+# sk_fea,im_fea = model.encode(sk.cuda(),im.cuda())
+# ca_fea = torch.cat([sk_fea,im_fea])
+print(ca_fea.shape)
 cls_fea = ca_fea[:, 0]  # [2b, 1, 768]
 token_fea = ca_fea[:, 1:]  # [2b, 196, 768]
 print(token_fea.shape)
@@ -258,7 +261,8 @@ cos_scores = patch_replaced.patch_similarity(token_fea[sk.size(0)-1], token_fea[
 # print(sk_fea.shape, im_fea.shape)
 # cos_scores = rn.cos_similar(sk_fea, im_fea)
 print(cos_scores.shape)
-np.savetxt("./logs/cos_scores",cos_scores.cpu()[0])
+# print(cos_scores,file=open("logs/idea1/cos_scores","+w"))
+np.savetxt("./logs/idea1/cos_scores",cos_scores.detach().cpu().numpy()[0])
 
 #%%
 # # print(cos_scores.argsort(0).shape,cos_scores.argsort(0))
@@ -282,7 +286,17 @@ np.savetxt("./logs/cos_scores",cos_scores.cpu()[0])
     
 # # print(np.unravel_index(b.values, (3, 196)))
 # np.savetxt("./logs/max_indices",max_indices)
-max_indices=patch_replaced.sort_patch_similarity(cos_scores)
-# %%
+max_indices=patch_replaced.sort_patch_similarity(cos_scores,to1=True)
 print(max_indices)
+
+max_indices_2=patch_replaced.sort_patch_similarity(cos_scores)
+print(max_indices_2)
+
+# %%
+im_replaced_list = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
+torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced_list),"logs/idea1/cup.jpg")
+
+im_replaced_list_2 = patch_replaced.generate_patch_replaced_im(max_indices_2,im)
+torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced_list_2),"logs/idea1/cup2.jpg")
+
 # %%
