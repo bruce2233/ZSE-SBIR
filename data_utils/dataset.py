@@ -146,6 +146,7 @@ class ScribbleExtendTrainSet(TrainSet):
                                     self.pre_load.all_train_image_cls_name, 1, self.pre_load.all_train_image)
 
         # 将sketch正例替换为scribble
+        sketch_neg = sketch
         scribble = scribble_path(image_paths)
         sketch = scribble
         

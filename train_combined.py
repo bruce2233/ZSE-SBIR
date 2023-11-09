@@ -91,35 +91,54 @@ def train():
             im_fea = transform_BCPP2BsquarePC(im_fea)
             print(sk_fea.shape)
             
-            sk_1 = sk[:1]
-            im_1 = im[:1]
-            im_2 = im[1:]
-            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk_1,im_1,im_2])),f"logs/sk_im_mixed.jpg")
-            sk_11_fea, im_1_fea=model.encode(sk_1,im_1)
-            sk_12_fea, im_2_fea =model.encode(sk_1,im_2)
-            sk_11_fea = transform_BCPP2BsquarePC(sk_11_fea)
-            sk_12_fea = transform_BCPP2BsquarePC(sk_12_fea)
-            im_1_fea = transform_BCPP2BsquarePC(im_1_fea)
-            im_2_fea = transform_BCPP2BsquarePC(im_2_fea)
-            print(sk_11_fea.shape, sk_11_fea.shape, im_1_fea.shape, im_2_fea.shape)
+            def test_encoder1():
+                #sk cross attention with im and im_neg
+                sk_1 = sk[:1]
+                im_1 = im[:1]
+                im_2 = im[1:]
+                torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk_1,im_1,im_2])),f"logs/sk_im_mixed.jpg")
+                sk_11_fea, im_1_fea=model.encode(sk_1,im_1)
+                sk_12_fea, im_2_fea =model.encode(sk_1,im_2)
+                sk_11_fea = transform_BCPP2BsquarePC(sk_11_fea)
+                sk_12_fea = transform_BCPP2BsquarePC(sk_12_fea)
+                im_1_fea = transform_BCPP2BsquarePC(im_1_fea)
+                im_2_fea = transform_BCPP2BsquarePC(im_2_fea)
+                print(sk_11_fea.shape, sk_11_fea.shape, im_1_fea.shape, im_2_fea.shape)
+                
+                
+                sk_cs=torch.nn.functional.cosine_similarity(sk_11_fea,sk_12_fea)
+                im_cs=torch.nn.functional.cosine_similarity(im_1_fea,im_2_fea)
+                
+                max_indices_1 = patch_replaced.fea_sorted_similarity(sk_11_fea, im_1_fea,to1=True)
+                im_replaced_1 = patch_replaced.generate_patch_replaced_im_1to1(max_indices_1, im_1)
+                print(max_indices_1, im_replaced_1)
+                max_indices_2 = patch_replaced.fea_sorted_similarity(sk_12_fea, im_2_fea,to1=True)
+                im_replaced_2 = patch_replaced.generate_patch_replaced_im_1to1(max_indices_2, im_2)
+                print(max_indices_2, im_replaced_2)
+                
+                torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat(im_replaced_1)),f"logs/sk_im_rep_mixed1.jpg")
+                torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat(im_replaced_2)),f"logs/sk_im_rep_mixed2.jpg")
+                print(torch.nn.functional.cosine_similarity(im_fea[0],im_fea[1]))
             
-            
-            sk_cs=torch.nn.functional.cosine_similarity(sk_11_fea,sk_12_fea)
-            im_cs=torch.nn.functional.cosine_similarity(im_1_fea,im_2_fea)
-            
-            max_indices_1 = patch_replaced.fea_sorted_similarity(sk_11_fea, im_1_fea,to1=True)
-            im_replaced_1 = patch_replaced.generate_patch_replaced_im_1to1(max_indices_1, im_1)
-            print(max_indices_1, im_replaced_1)
-            max_indices_2 = patch_replaced.fea_sorted_similarity(sk_12_fea, im_2_fea,to1=True)
-            im_replaced_2 = patch_replaced.generate_patch_replaced_im_1to1(max_indices_2, im_2)
-            print(max_indices_2, im_replaced_2)
-            
-            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat(im_replaced_1)),f"logs/sk_im_rep_mixed1.jpg")
-            torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat(im_replaced_2)),f"logs/sk_im_rep_mixed2.jpg")
-            
-            
-            
-            print(torch.nn.functional.cosine_similarity(im_fea[0],im_fea[1]))
+            def test_encoder2():
+                sk_pos = sk[:1]
+                sk_neg = sk[1:]
+                im_pos = im[:1]
+                im_neg = im[1:]
+                torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk_pos,sk_neg, im_pos,im_neg])),f"logs/encoder2/dataset{index}.jpg")
+                sk_fea, im_fea = model.encode(sk,im)
+                sk_fea = transform_BCPP2BsquarePC(sk_fea)
+                im_fea = transform_BCPP2BsquarePC(im_fea)
+                print(sk_fea.shape, im_fea.shape)
+                
+                max_indices_sp2ip = patch_replaced.fea_sorted_similarity(sk_fea[:1], im_fea[:1],to1=True)
+                im_replaced_sp2ip = patch_replaced.generate_patch_replaced_im_1to1(max_indices_sp2ip,im)
+                max_indices_sn2ip = patch_replaced.fea_sorted_similarity(sk_fea[1:], im_fea[:1],to1=True)
+                im_replaced_sn2ip = patch_replaced.generate_patch_replaced_im_1to1(max_indices_sn2ip,im)
+                torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([torch.cat(im_replaced_sp2ip).unsqueeze(0),torch.cat(im_replaced_sn2ip).unsqueeze(0)])),f"logs/encoder2/rep{index}.jpg")
+                
+                
+            test_encoder2()
             max_indices = patch_replaced.fea_sorted_similarity(sk_fea, im_fea,to1=True)
             im_replaced = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
             torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced),f"logs/sk_im_rep_{index}.jpg")
