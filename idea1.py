@@ -202,23 +202,31 @@ def select_sk_im():
     sk_index= 0
     # im_index = arg_sort_sim[sk_index,:1]
     im_index = [286]
-    return sk_index, im_index
+    
+    print(sk_index, im_index)
+    (sk,_) = sk_valid_data[sk_index]
+    sk = sk.unsqueeze(0)
+
+    tmp = [im_valid_data[i] for i in im_index]
+    im = [i[0].unsqueeze(0) for i in tmp]
+    im = torch.cat(im)
+    print(sk.shape, im.shape)
+    
+    from PIL import Image
+    from data_utils.utils import preprocess
+    im = preprocess("datasets/Sketchy/256x256/photo/tx_000000000000_ready/cup/n03063073_2328.jpg").unsqueeze(0).to(dtype=torch.half)
+    
+    sk = preprocess("datasets/Sketchy/256x256/sketch/tx_000000000000_ready/cup/n03063073_2328-3.png",img_type="sk").unsqueeze(0).to(dtype=torch.half)
+    return sk, im,sk_index, im_index
 # (sk_tmp, im_tmp) = patch_replace_data(max_indices, im_valid_data[im_index[0],im_index[1],im_index[2],])
 
-sk_index, im_index = select_sk_im()
-print(sk_index, im_index)
-(sk,_) = sk_valid_data[sk_index]
-sk = sk.unsqueeze(0)
+sk, im, sk_index, im_index = select_sk_im()
+print(sk.shape,im.shape)
 
-tmp = [im_valid_data[i] for i in im_index]
-im = [i[0].unsqueeze(0) for i in tmp]
-im = torch.cat(im)
-print(sk.shape, im.shape)
-
-torchvision.utils.save_image(sk.cuda(),f"./logs/sk-{sk_index}.jpg")
+torchvision.utils.save_image(sk.cuda(),f"./logs/idea1/sk-{sk_index}.jpg")
 
 # im_tmp = torchvision.utils.make_grid(im)
-torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk.cuda(),im.cuda()])),f"./logs/im_{sk_index}_top_{len(im_index)}.jpg")
+torchvision.utils.save_image(torchvision.utils.make_grid(torch.cat([sk.cuda(),im.cuda()])),f"./logs/idea1/im_{sk_index}_top_{len(im_index)}.jpg")
 print(sk.shape, im.shape)
 
 #%%
@@ -294,9 +302,9 @@ print(max_indices_2)
 
 # %%
 im_replaced_list = patch_replaced.generate_patch_replaced_im_1to1(max_indices,im)
-torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced_list),"logs/idea1/cup.jpg")
+torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced_list),"logs/idea1/cup_3.jpg")
 
 im_replaced_list_2 = patch_replaced.generate_patch_replaced_im(max_indices_2,im)
-torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced_list_2),"logs/idea1/cup2.jpg")
+torchvision.utils.save_image(torchvision.utils.make_grid(im_replaced_list_2),"logs/idea1/cup_4.jpg")
 
 # %%

@@ -63,6 +63,7 @@ def train():
         num_total_steps = args.datasetLen // args.batch
 
         for index, (sk, im, sk_neg, im_neg, sk_label, im_label, _, _) in enumerate(train_data_loader):
+            sk,im,sk_neg,im_neg = select_dataitem()
             # prepare data
             sk = torch.cat([sk, sk_neg])
             im = torch.cat([im, im_neg])
@@ -186,6 +187,18 @@ def transform_BCPP2BsquarePC(fea):
     c = fea.size(1)
     return fea.view(batch, c, patch_size*patch_size).transpose(1,2)
 
+def select_dataitem():
+    from data_utils.utils import preprocess
+    
+    im = preprocess("datasets/Sketchy/256x256/photo/tx_000000000000_ready/cup/n03063073_2328.jpg").unsqueeze(0)
+    
+    sk = preprocess("datasets/Sketchy/256x256/sketch/tx_000000000000_ready/cup/n03063073_2328-3.png",img_type="sk").unsqueeze(0)
+    
+    scribble = preprocess("datasets/Sketchy/scribble/256x256/photo/tx_000000000000_ready/cup/n03063073_2328.jpg").unsqueeze(0)
+    
+    im_neg = preprocess("datasets/Sketchy/256x256/photo/tx_000000000000_ready/lobster/n01983481_16070.jpg").unsqueeze(0)
+    return scribble, im, sk, im_neg
+    
 if __name__ == '__main__':
     args = Option().parse()
     print("train args:", str(args))
