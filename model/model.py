@@ -85,7 +85,7 @@ class Model(nn.Module):
         sa_fea, left_tokens, idxs = self.sa(sk_or_im)  # [b, 197, 768]
         return sa_fea, idxs
     
-    def encode(self, sk, im, only_sa=False):
+    def encode(self, sk, im, only_sa=False,individual=False):
         '''
             sk, im: (b,n,c)
         '''
@@ -95,8 +95,13 @@ class Model(nn.Module):
             res = torch.cat([sk_sa,im_sa])
             return res
         else:
-            sk_im = torch.cat((sk, im), dim=0)
-            sa_fea, left_tokens, idxs = self.sa(sk_im)  # [4b, 197, 768]
+            if individual:
+                sk_sa,_,_ = self.sa(sk)
+                im_sa,_,_ = self.sa(im)    
+                sa_fea = torch.cat([sk_sa,im_sa])
+            else:
+                sk_im = torch.cat((sk, im), dim=0)
+                sa_fea, left_tokens, idxs = self.sa(sk_im)  # [4b, 197, 768]
             ca_fea = self.ca(sa_fea)  # [4b, 197, 768]
             cls_fea = ca_fea[:, 0]  # [2b, 1, 768]
             token_fea = ca_fea[:, 1:]  # [2b, 196, 768]
